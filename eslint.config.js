@@ -24,7 +24,7 @@ export default [
     },
   },
 
-  // 🔹 Integración de Prettier y configuración de formato
+  // 🔹 Configuración de plugins y reglas personalizadas
   {
     plugins: {
       prettier: prettierPlugin,
@@ -33,17 +33,7 @@ export default [
     rules: {
       // 🧩 Formato Prettier
       ...prettierConfig.rules,
-      'prettier/prettier': [
-        'error',
-        {
-          endOfLine: 'auto',
-          semi: true,
-          singleQuote: true,
-          trailingComma: 'es5',
-          tabWidth: 2,
-          printWidth: 100,
-        },
-      ],
+      'prettier/prettier': ['error'],
 
       // 🧩 Buenas prácticas generales
       'no-unused-vars': 'warn',

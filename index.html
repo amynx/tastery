@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-theme="caramellatte" lang="en">
+<html data-theme="silk" lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -11,5 +11,134 @@
     <script type="module" src="/src/main.js" defer></script>
     <title>Tastery</title>
   </head>
-  <body></body>
+  <body>
+    <!-- ========================================================================================= -->
+    <!-- @section Navbar -->
+    <!-- @description
+     Main navigation bar for the Tastery web application.
+     It contains the logo, a search bar, and main action buttons.
+     Behavior by screen size:
+       - Desktop (md and up): logo on the far left, search bar near the logo (not too close), 
+         and buttons aligned to the far right.
+       - Tablet and mobile (sm and below): the search bar and full-size buttons are hidden.
+         Compact icon buttons appear instead, and the “Add Recipe” action becomes a Floating Action Button (FAB).
+-->
+    <!-- @responsive
+     - md and up: full navbar layout visible.
+     - sm and below: compact mobile layout with icons and FAB.
+-->
+    <!-- ========================================================================================= -->
+
+    <nav class="navbar bg-base-200">
+      <!-- ======================== LOGO ======================== -->
+      <!-- @element Logo -->
+      <!-- @description
+       Displays the application icon and title “Tastery”.
+       It remains anchored to the far-left side of the navbar.
+  -->
+      <div class="ps-4 flex items-center gap-2">
+        <i data-lucide="chef-hat"></i>
+        <a class="text-lg font-bold uppercase">Tastery</a>
+      </div>
+
+      <!-- ======================== SEARCH BAR ======================== -->
+      <!-- @element SearchBar -->
+      <!-- @description
+       Centered search input located slightly away from the logo (not too close).
+       Visible only on desktop and larger screens.
+  -->
+      <label class="input hidden md:flex items-center gap-2 ml-8">
+        <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <g
+            stroke-linejoin="round"
+            stroke-linecap="round"
+            stroke-width="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input type="search" required placeholder="Search" />
+      </label>
+
+      <!-- ======================== ACTIONS ======================== -->
+      <!-- @element Actions -->
+      <!-- @description
+       Right-aligned container for primary action buttons.
+       On desktop: full-size “Add Recipe” and “Saved Recipes” dropdown.
+       On mobile: replaced with compact icons and a FAB.
+  -->
+      <div class="flex grow justify-end px-2">
+        <div class="hidden md:flex items-stretch">
+          <!-- Add Recipe Button -->
+          <a class="btn btn-ghost rounded-field uppercase">
+            <i data-lucide="plus"></i>
+            Add Recipe
+          </a>
+
+          <!-- Saved Recipes Dropdown -->
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost rounded-field uppercase">
+              <i data-lucide="bookmark"></i>
+              Saved
+            </div>
+            <ul
+              tabindex="-1"
+              class="menu dropdown-content bg-base-200 rounded-box z-10 mt-4 w-52 p-2 shadow-sm"
+            >
+              <li><a>Recipe 1</a></li>
+              <li><a>Recipe 2</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== MOBILE ACTIONS ======================== -->
+      <!-- @element MobileActions -->
+      <!-- @description
+       Compact icon buttons that replace the search bar and dropdown on smaller screens.
+       Includes a search icon and a saved recipes icon (dropdown preserved).
+  -->
+      <div class="flex md:hidden gap-2 pe-4 items-center">
+        <!-- Search Icon Button -->
+        <button class="btn btn-ghost btn-sm" aria-label="Search">
+          <i data-lucide="search"></i>
+        </button>
+
+        <!-- Saved Recipes Dropdown (Compact Version) -->
+        <div class="dropdown dropdown-end">
+          <button
+            tabindex="0"
+            role="button"
+            class="btn btn-ghost btn-sm"
+            aria-label="Saved Recipes"
+          >
+            <i data-lucide="bookmark"></i>
+          </button>
+          <ul
+            tabindex="-1"
+            class="menu dropdown-content bg-base-200 rounded-box z-10 mt-2 w-48 p-2 shadow-sm"
+          >
+            <li><a>Recipe 1</a></li>
+            <li><a>Recipe 2</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======================== FLOATING ACTION BUTTON ======================== -->
+    <!-- @element FAB -->
+    <!-- @description
+     Floating Action Button for adding new recipes.
+     Visible only on mobile and tablet screens.
+     Positioned above all elements using fixed placement and high z-index.
+-->
+    <div class="fixed bottom-6 right-6 md:hidden z-50">
+      <button class="btn btn-primary btn-circle shadow-lg" aria-label="Add Recipe">
+        <i data-lucide="plus"></i>
+      </button>
+    </div>
+  </body>
 </html>

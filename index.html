@@ -246,5 +246,188 @@
         </div>
       </nav>
     </section>
+
+    <!-- ========================================================================================= -->
+    <!-- @section RecipeDetail -->
+    <!-- @description
+  This component displays the complete details of a selected recipe after a user clicks on a
+  search result. It includes the recipe image, title, cooking time, serving controls, save button,
+  list of ingredients, and author information with a redirect button.
+-->
+    <!-- @responsive
+  Fully responsive. Stacks vertically on mobile (sm) and arranges content in columns for larger screens (md+).
+-->
+    <!-- ========================================================================================= -->
+
+    <section
+      id="recipe-detail"
+      role="region"
+      aria-labelledby="recipe-title"
+      class="w-full max-w-5xl mx-auto p-6 rounded-2xl shadow-md bg-base-100"
+    >
+      <!-- ======================== LOADING STATE ======================== -->
+      <!-- @state loading -->
+      <!-- @description
+    Hidden by default. When the recipe data is being fetched, this loader becomes visible.
+  -->
+      <!-- @note
+    Controlled via a parent reactive state or class toggle.
+  -->
+      <div
+        id="recipe-loading"
+        class="hidden flex justify-center items-center py-12"
+        role="status"
+        aria-live="polite"
+      >
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+        <span class="sr-only">Loading recipe...</span>
+      </div>
+
+      <!-- ======================== RECIPE CONTAINER ======================== -->
+      <!-- @element RecipeContent -->
+      <!-- @description
+    Main visible container for recipe data. Displayed when recipe content is available.
+  -->
+      <article id="recipe-content" class="flex flex-col gap-8" aria-live="polite">
+        <!-- ======================== IMAGE & TITLE ======================== -->
+        <!-- @element RecipeHeader -->
+        <!-- @description
+      Displays the recipe image and title. The image provides visual context for the dish,
+      and the title identifies the recipe clearly.
+    -->
+        <header class="flex flex-col items-center text-center gap-4">
+          <figure class="w-full md:w-3/4 rounded-xl overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=781"
+              alt="Image of the selected recipe"
+              class="w-full h-auto object-cover"
+            />
+          </figure>
+          <h1 id="recipe-title" class="text-3xl font-bold text-base-content text-center uppercase">
+            Delicious Sample Recipe
+          </h1>
+        </header>
+
+        <!-- ======================== META & ACTIONS ======================== -->
+        <!-- @element RecipeMeta -->
+        <!-- @description
+      Contains cooking time info (with icon), serving adjustment controls, and a save button.
+      Left-aligned items control servings; right-aligned button toggles recipe saving.
+    -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b pb-4">
+          <!-- Cooking time -->
+          <div class="flex items-center gap-2">
+            <i data-lucide="clock" class="w-5 h-5 text-primary"></i>
+            <span class="text-base font-medium uppercase">45 minutes</span>
+          </div>
+
+          <!-- Serving controls -->
+          <div class="flex items-center gap-3">
+            <label
+              for="servings"
+              class="font-semibold text-base-content uppercase"
+              aria-label="Servings quantity"
+            >
+              Servings:
+            </label>
+            <div class="join">
+              <button class="btn btn-sm join-item" aria-label="Decrease servings">
+                <i data-lucide="minus" class="w-4 h-4"></i>
+              </button>
+              <input
+                id="servings"
+                type="number"
+                value="4"
+                min="1"
+                class="input input-sm join-item text-center w-16"
+                aria-live="polite"
+              />
+              <button class="btn btn-sm join-item" aria-label="Increase servings">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Save recipe button -->
+          <div>
+            <button
+              id="save-recipe-btn"
+              class="btn btn-outline btn-primary gap-2 uppercase"
+              aria-pressed="false"
+              aria-label="Save recipe"
+            >
+              <i data-lucide="bookmark" class="w-5 h-5"></i>
+              Save Recipe
+            </button>
+          </div>
+        </div>
+
+        <!-- ======================== INGREDIENTS LIST ======================== -->
+        <!-- @element IngredientsList -->
+        <!-- @description
+      Displays the list of ingredients with a section title.
+      Each ingredient includes a check icon, quantity, unit, and description.
+      The list is presented in two columns for better readability on large screens.
+    -->
+        <section aria-labelledby="ingredients-title" class="flex flex-col items-center gap-4">
+          <h2
+            id="ingredients-title"
+            class="text-2xl font-semibold text-base-content text-center uppercase"
+          >
+            Recipe Ingredients
+          </h2>
+
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none" role="list">
+            <li class="flex items-center gap-3">
+              <i data-lucide="check" class="w-5 h-5 text-success"></i>
+              <span>200 g – flour</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <i data-lucide="check" class="w-5 h-5 text-success"></i>
+              <span>2 pcs – eggs</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <i data-lucide="check" class="w-5 h-5 text-success"></i>
+              <span>100 ml – milk</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <i data-lucide="check" class="w-5 h-5 text-success"></i>
+              <span>1 tsp – salt</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ======================== AUTHOR INFO ======================== -->
+        <!-- @element RecipeAuthor -->
+        <!-- @description
+      Displays the recipe author’s information, including a title, description,
+      and a button to visit the author’s website or external source.
+    -->
+        <footer
+          class="border-t pt-4 flex flex-col items-center gap-3"
+          aria-labelledby="author-title"
+        >
+          <h3
+            id="author-title"
+            class="text-xl font-semibold text-base-content text-center uppercase"
+          >
+            Recipe Author
+          </h3>
+          <p class="text-center text-base text-base-content/80">
+            Created by <strong>Chef Anna</strong>, passionate about easy homemade meals.
+          </p>
+          <a
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-sm btn-secondary flex items-center gap-2"
+            aria-label="Visit author website"
+          >
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            Visit Website
+          </a>
+        </footer>
+      </article>
+    </section>
   </body>
 </html>

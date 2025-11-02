@@ -433,5 +433,273 @@
         </article>
       </section>
     </main>
+
+    <!-- ========================================================================================= -->
+    <!-- @section AddRecipeForm -->
+    <!-- @description
+  This component defines a modal form overlay that appears above all interface elements 
+  when the "Add Recipe" button is clicked. Its purpose is to collect recipe information 
+  divided into two main sections: general recipe data and ingredients. The form includes 
+  dynamic ingredient fields and a submission button to upload the recipe.
+-->
+    <!-- @responsive
+  The modal is centered and responsive on all devices. 
+  It scales smoothly from mobile (full width) to desktop (contained layout).
+-->
+    <!-- ========================================================================================= -->
+
+    <!-- ======================== FORM OVERLAY WRAPPER ======================== -->
+    <!-- @element FormOverlay -->
+    <!-- @description
+  Acts as the top-level overlay containing the recipe form.
+  Uses DaisyUI's modal pattern with a backdrop and focus lock.
+-->
+    <div
+      id="addRecipeModal"
+      class="hidden modal modal-open"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="addRecipeTitle"
+    >
+      <div class="modal-box w-11/12 max-w-3xl bg-base-100 shadow-xl rounded-2xl">
+        <!-- ======================== FORM HEADER ======================== -->
+        <!-- @element FormHeader -->
+        <!-- @description
+      Displays the main title of the modal and a close button for dismissing the form.
+    -->
+        <header class="flex items-center justify-between mb-4">
+          <h2 id="addRecipeTitle" class="text-2xl font-bold text-primary uppercase">Add New Recipe</h2>
+          <button class="btn btn-sm btn-circle btn-ghost" aria-label="Close modal">✕</button>
+        </header>
+
+        <!-- ======================== FORM BODY ======================== -->
+        <!-- @element FormBody -->
+        <!-- @description
+      Contains two logical sections for recipe data and ingredients.
+    -->
+        <form class="space-y-6" role="form" aria-live="polite">
+          <!-- ======================== SECTION 1: RECIPE DATA ======================== -->
+          <!-- @element RecipeDataSection -->
+          <!-- @description
+        Collects the main recipe metadata such as title, source URL, image URL, 
+        publisher name, preparation time, and servings count.
+      -->
+          <section aria-labelledby="recipeDataTitle" class="border border-base-200 p-4 rounded-xl">
+            <h3 id="recipeDataTitle" class="text-lg font-semibold text-secondary mb-3">
+              RECIPE DATA
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Title -->
+              <div class="form-control">
+                <label class="label" for="recipeTitle">
+                  <span class="label-text font-medium">Title</span>
+                </label>
+                <input
+                  type="text"
+                  id="recipeTitle"
+                  name="title"
+                  placeholder="e.g., Chocolate Cake"
+                  class="input input-bordered w-full"
+                  required
+                />
+              </div>
+
+              <!-- URL -->
+              <div class="form-control">
+                <label class="label" for="recipeUrl">
+                  <span class="label-text font-medium">Recipe URL</span>
+                </label>
+                <input
+                  type="url"
+                  id="recipeUrl"
+                  name="sourceUrl"
+                  placeholder="e.g., https://example.com"
+                  class="input input-bordered w-full"
+                />
+              </div>
+
+              <!-- Image URL -->
+              <div class="form-control">
+                <label class="label" for="imageUrl">
+                  <span class="label-text font-medium">Image URL</span>
+                </label>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="image"
+                  placeholder="e.g., https://example.com/image.jpg"
+                  class="input input-bordered w-full"
+                />
+              </div>
+
+              <!-- Publisher -->
+              <div class="form-control">
+                <label class="label" for="publisher">
+                  <span class="label-text font-medium">Publisher</span>
+                </label>
+                <input
+                  type="text"
+                  id="publisher"
+                  name="publisher"
+                  placeholder="e.g., John Doe"
+                  class="input input-bordered w-full"
+                />
+              </div>
+
+              <!-- Prep Time -->
+              <div class="form-control">
+                <label class="label" for="prepTime">
+                  <span class="label-text font-medium">Prep Time (min)</span>
+                </label>
+                <input
+                  type="number"
+                  id="prepTime"
+                  name="prepTime"
+                  min="1"
+                  placeholder="e.g., 30"
+                  class="input input-bordered w-full"
+                />
+              </div>
+
+              <!-- Servings -->
+              <div class="form-control">
+                <label class="label" for="servings">
+                  <span class="label-text font-medium">Servings</span>
+                </label>
+                <input
+                  type="number"
+                  id="servings"
+                  name="servings"
+                  min="1"
+                  placeholder="e.g., 4"
+                  class="input input-bordered w-full"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- ======================== SECTION 2: INGREDIENTS ======================== -->
+          <!-- @element IngredientsSection -->
+          <!-- @description
+        Contains ingredient input fields. Initially provides 6 fields and includes 
+        a button to dynamically add more as needed.
+      -->
+          <section aria-labelledby="ingredientsTitle" class="border border-base-200 p-4 rounded-xl">
+            <h3 id="ingredientsTitle" class="text-lg font-semibold text-secondary mb-3">
+              INGREDIENTS
+            </h3>
+
+            <!-- Ingredients Grid -->
+            <div id="ingredientsWrapper" class="space-y-3">
+              <!-- @state default: 6 input fields -->
+              <!-- Each ingredient input represents one ingredient line in the recipe -->
+              <template id="ingredientTemplate">
+                <div class="form-control">
+                  <input
+                    type="text"
+                    placeholder="e.g., 100g sugar"
+                    class="input input-bordered w-full ingredient-input"
+                  />
+                </div>
+              </template>
+
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 1"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 2"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 3"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 4"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 5"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  placeholder="Ingredient 6"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+            </div>
+
+            <!-- Add Ingredient Button -->
+            <!-- @element AddIngredientButton -->
+            <!-- @description
+          Allows users to add new ingredient input fields dynamically.
+        -->
+            <div class="mt-4 text-right">
+              <button
+                type="button"
+                id="addIngredientBtn"
+                class="btn btn-outline btn-sm"
+                aria-label="Add another ingredient"
+              >
+                + Add Ingredient
+              </button>
+            </div>
+          </section>
+
+          <!-- ======================== FORM SUBMIT BUTTON ======================== -->
+          <!-- @element SubmitButton -->
+          <!-- @description
+        The upload button finalizes the form submission. It includes an upload icon 
+        and follows DaisyUI button styling conventions.
+      -->
+          <div class="text-center pt-4">
+            <button type="submit" class="btn btn-primary gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 8l-3-3m3 3l3-3"
+                />
+              </svg>
+              Upload
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ======================== MODAL BACKDROP ======================== -->
+      <!-- @element ModalBackdrop -->
+      <!-- @description
+    Darkens the background and captures clicks outside the modal to close it.
+  -->
+      <div class="modal-backdrop"></div>
+    </div>
   </body>
 </html>

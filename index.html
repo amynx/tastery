@@ -468,7 +468,9 @@
       Displays the main title of the modal and a close button for dismissing the form.
     -->
         <header class="flex items-center justify-between mb-4">
-          <h2 id="addRecipeTitle" class="text-2xl font-bold text-primary uppercase">Add New Recipe</h2>
+          <h2 id="addRecipeTitle" class="text-2xl font-bold text-primary uppercase">
+            Add New Recipe
+          </h2>
           <button class="btn btn-sm btn-circle btn-ghost" aria-label="Close modal">✕</button>
         </header>
 
@@ -701,5 +703,119 @@
   -->
       <div class="modal-backdrop"></div>
     </div>
+
+    <!-- ========================================================================================= -->
+    <!-- @section AlertNotification -->
+    <!-- @description
+  This component displays a contextual alert message to inform the user about the status
+  of any action or process. It includes an icon, a title, and a short descriptive message.
+  The alert appears in a floating position depending on the screen size.
+-->
+    <!-- @responsive
+  On desktop screens (md and above): positioned at the top-right corner of the viewport.
+  On mobile screens (below md): centered horizontally at the top of the viewport.
+-->
+    <!-- ========================================================================================= -->
+
+    <section
+      id="alert-notification"
+      role="status"
+      aria-live="polite"
+      class="fixed top-4 left-1/2 -translate-x-1/2 md:left-auto md:right-4 md:translate-x-0 z-50 w-[90%] max-w-sm animate-fadeIn"
+    >
+      <!-- ======================== ALERT CONTAINER ======================== -->
+      <!-- @element AlertContainer -->
+      <!-- @description
+    The main container that holds the icon, title, and description.
+    Uses DaisyUI's alert component for consistent styling and accessibility.
+  -->
+      <article
+        class="alert shadow-lg bg-base-100 border border-base-300 rounded-xl p-4 flex items-start gap-3"
+      >
+        <!-- ======================== ICON BLOCK ======================== -->
+        <!-- @element AlertIcon -->
+        <!-- @description
+      The visual icon indicating the type of alert (success, error, info, or warning).
+      This icon provides immediate context to the user about the nature of the message.
+    -->
+        <span class="text-success flex-shrink-0 mt-0.5" role="img" aria-label="success icon">
+          <!-- You can swap the icon below depending on the alert type -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </span>
+
+        <!-- ======================== CONTENT BLOCK ======================== -->
+        <!-- @element AlertContent -->
+        <!-- @description
+      Contains the textual elements of the alert including the title and description.
+      It provides the core information for the user.
+    -->
+        <div class="flex flex-col gap-1">
+          <!-- @element AlertTitle -->
+          <!-- @description
+        The concise title summarizing the purpose of the alert.
+      -->
+          <h2 class="font-semibold text-base-content text-sm md:text-base">Action Successful</h2>
+
+          <!-- @element AlertDescription -->
+          <!-- @description
+        A short explanation giving more context about the alert message.
+      -->
+          <p class="text-sm text-base-content/70">Your changes have been saved successfully.</p>
+        </div>
+
+        <!-- ======================== CLOSE BUTTON ======================== -->
+        <!-- @element CloseButton -->
+        <!-- @description
+      Provides an accessible way for the user to dismiss the alert manually.
+      Visible only when the alert supports manual dismissal.
+    -->
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm ml-auto text-base-content/60 hover:text-base-content"
+          aria-label="Close alert"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </article>
+
+      <!-- ======================== LOADING STATE (OPTIONAL) ======================== -->
+      <!-- @state loading -->
+      <!-- @description
+    When the alert is triggered during a pending action, a loading spinner may be shown
+    to indicate ongoing activity.
+  -->
+      <!--
+        <div
+          class="alert shadow-lg bg-base-100 border border-base-300 rounded-xl p-4 flex items-center gap-3"
+        >
+          <span class="loading loading-spinner text-primary"></span>
+          <p class="text-sm text-base-content/70">Processing your request...</p>
+        </div>
+        -->
+    </section>
   </body>
 </html>

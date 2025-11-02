@@ -443,8 +443,9 @@
   dynamic ingredient fields and a submission button to upload the recipe.
 -->
     <!-- @responsive
-  The modal is centered and responsive on all devices. 
-  It scales smoothly from mobile (full width) to desktop (contained layout).
+  The modal is fully responsive:
+  - On desktop: centered horizontally and vertically, with soft spacing from viewport edges.
+  - On tablets and mobile: centered horizontally, slightly offset from the top to ensure visibility.
 -->
     <!-- ========================================================================================= -->
 
@@ -456,12 +457,22 @@
 -->
     <div
       id="addRecipeModal"
-      class="hidden modal modal-open"
+      class="modal modal-open bg-base-900/40 backdrop-blur-sm transition-all duration-300"
       role="dialog"
       aria-modal="true"
       aria-labelledby="addRecipeTitle"
     >
-      <div class="modal-box w-11/12 max-w-3xl bg-base-100 shadow-xl rounded-2xl">
+      <!-- ======================== FORM CONTAINER ======================== -->
+      <!-- @element FormContainer -->
+      <!-- @description
+    The main modal box that holds all form content.
+    Centered and spaced according to screen size:
+    - Desktop: vertically centered with breathing space.
+    - Tablet/Mobile: pushed slightly down from the top.
+  -->
+      <div
+        class="modal-box w-11/12 max-w-3xl bg-base-100 shadow-xl rounded-2xl mx-auto my-6 sm:my-10 md:my-16 lg:my-20 overflow-y-auto max-h-[90vh]"
+      >
         <!-- ======================== FORM HEADER ======================== -->
         <!-- @element FormHeader -->
         <!-- @description
@@ -471,7 +482,13 @@
           <h2 id="addRecipeTitle" class="text-2xl font-bold text-primary uppercase">
             Add New Recipe
           </h2>
-          <button class="btn btn-sm btn-circle btn-ghost" aria-label="Close modal">✕</button>
+          <button
+            class="btn btn-sm btn-circle btn-ghost"
+            aria-label="Close modal"
+            title="Close form"
+          >
+            ✕
+          </button>
         </header>
 
         <!-- ======================== FORM BODY ======================== -->
@@ -609,42 +626,42 @@
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 1"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 2"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 3"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 4"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 5"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Ingredient 6"
+                  placeholder="Quantity, unit and description"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>

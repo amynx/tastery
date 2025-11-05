@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-theme="bumblebee" lang="en">
+<html data-theme="light" lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -209,8 +209,10 @@
           <!-- @description
         Represents a single search result item showing an image, title, and author/source.
       -->
-          <article
-            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full"
+
+          <a
+            href="#664c8f193e7aa067e94e863f"
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
             role="listitem"
           >
             <div class="card-body flex flex-row items-center gap-4 p-4">
@@ -232,7 +234,33 @@
                 <p class="text-sm text-gray-500 capitalize">By Author Or Source</p>
               </div>
             </div>
-          </article>
+          </a>
+
+          <a
+            href="#664c8f193e7aa067e94e8ad4"
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
+            role="listitem"
+          >
+            <div class="card-body flex flex-row items-center gap-4 p-4">
+              <!-- Thumbnail -->
+              <figure class="shrink-0">
+                <img
+                  src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&q=80&w=710"
+                  alt="Result thumbnail"
+                  class="rounded-full w-16 h-16 object-cover"
+                  loading="lazy"
+                />
+              </figure>
+
+              <!-- Text Content -->
+              <div class="flex flex-col justify-center">
+                <h2 class="card-title text-base font-semibold uppercase line-clamp-2">
+                  EXAMPLE RESULT TITLE GOES HERE
+                </h2>
+                <p class="text-sm text-gray-500 capitalize">By Author Or Source</p>
+              </div>
+            </div>
+          </a>
 
           <!-- @note Repeat ResultCard dynamically based on search results. -->
         </div>
@@ -457,7 +485,7 @@
 -->
     <div
       id="addRecipeModal"
-      class="modal modal-open bg-base-900/40 backdrop-blur-sm transition-all duration-300"
+      class="hidden modal modal-open bg-base-900/40 backdrop-blur-sm transition-all duration-300"
       role="dialog"
       aria-modal="true"
       aria-labelledby="addRecipeTitle"
@@ -738,7 +766,7 @@
       id="alert-notification"
       role="status"
       aria-live="polite"
-      class="fixed top-4 left-1/2 -translate-x-1/2 md:left-auto md:right-4 md:translate-x-0 z-50 w-[90%] max-w-sm animate-fadeIn"
+      class="hidden fixed top-4 left-1/2 -translate-x-1/2 md:left-auto md:right-4 md:translate-x-0 z-50 w-[90%] max-w-sm"
     >
       <!-- ======================== ALERT CONTAINER ======================== -->
       <!-- @element AlertContainer -->

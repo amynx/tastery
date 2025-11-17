@@ -41,27 +41,61 @@
         <a class="text-lg font-bold uppercase">Tastery</a>
       </div>
 
-      <!-- ======================== SEARCH BAR ======================== -->
-      <!-- @element SearchBar -->
+      <!-- ========================================================================================= -->
+      <!-- @section SearchForm -->
       <!-- @description
-       Centered search input located slightly away from the logo (not too close).
-       Visible only on desktop and larger screens.
+  Semantic search form used for querying content within the application.
+  The form adapts its max-width depending on screen size, ensuring balanced layout composition.
+  - Tablet screens: occupies up to 40% of available horizontal space.
+  - Desktop and larger screens: constrained to a maximum of 35% for a more compact design.
+-->
+      <!-- @responsive
+  Hidden on mobile. Visible on md+ screens with responsive max-width rules.
+-->
+      <!-- ========================================================================================= -->
+
+      <form
+        id="primary-search-form"
+        role="search"
+        aria-label="Primary search"
+        class="hidden md:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
+      >
+        <!-- ======================== SEARCH BAR ======================== -->
+        <!-- @element SearchBar -->
+        <!-- @description
+    Search bar with icon and input field.
+    Styled using DaisyUI's input component. 
+    Automatically grows to fill the allowed container width.
   -->
-      <label class="input hidden md:flex items-center gap-2 ml-8">
-        <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
+        <label class="input flex items-center gap-2 w-full">
+          <svg
+            class="h-[1em] opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
           >
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </g>
-        </svg>
-        <input type="search" required placeholder="Search" />
-      </label>
+            <g
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+
+          <input
+            type="search"
+            placeholder="Search"
+            required
+            aria-label="Search query"
+            class="w-full"
+          />
+        </label>
+      </form>
 
       <!-- ======================== ACTIONS ======================== -->
       <!-- @element Actions -->

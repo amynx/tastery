@@ -1,5 +1,5 @@
 /**
- * @module controller/recipeController
+ * @module controller
  * @description
  * Main controller responsible for managing the flow of loading and displaying
  * recipes. This module listens for changes in the URL (hash) and coordinates the

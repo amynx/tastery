@@ -1,7 +1,67 @@
 /**
+ * @class recipeView
+ * @classdesc
+ * View responsible for rendering recipes, alerts, and loading states within
+ * the interface.
  *
+ * Manages:
+ * - Main rendering of the recipe
+ * - Animated alerts (success, info, error)
+ * - Loading states
+ * - Entry and exit animations
+ *
+ * This class must be used through its imported instance.
  */
 class recipeView {
+  /**
+   * @property {_data} _data
+   * @type {Object | null}
+   * @private
+   * @description Guarda los datos actuales de la receta renderizada.
+   */
+
+  /**
+   * @property {_parentElment}
+   * @type {HTMLElement}
+   * @private
+   * @description Contenedor donde se renderiza la receta completa.
+   */
+
+  /**
+   * @property {_spinnerParentElement}
+   * @type {HTMLElement}
+   * @private
+   * @description Contenedor donde se muestra el spinner de carga.
+   */
+
+  /**
+   * @property {_alertParentElement}
+   * @type {HTMLElement}
+   * @private
+   * @description Contenedor superior donde se muestran alertas animadas.
+   */
+
+  /**
+   * @property {_typeAlert}
+   * @type {Object<string, {title: string, description: string}>}
+   * @private
+   * @description Configuración de títulos y descripciones para cada tipo de alerta.
+   */
+
+  /**
+   * @property {_activeTimeout}
+   * @type {number | null}
+   * @private
+   * @description ID del timeout activo para ocultar alertas automáticamente.
+   */
+
+  /**
+   * @property {_isAnimating}
+   * @type {boolean}
+   * @private
+   * @description Indica si una alerta está actualmente en animación para evitar conflictos.
+   */
+
   _data;
   _parentElment = document.getElementById('recipe-detail');
   _spinnerParentElement = document.getElementById('recipe-loading');
@@ -23,7 +83,19 @@ class recipeView {
   _activeTimeout = null;
   _isAnimating = false;
 
-  // Renderiza el estado "cargando"
+  // ---------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Renders the “loading” alert state.
+   *
+   * @public
+   * @returns {void}
+   * @description
+   * Shows the user a visual notification that the system is retrieving data.
+   * Cancels any previous alerts before rendering a new one.
+   */
   renderAlertLoadingState = () => {
     this._clearAlert(); // Cancela cualquier animación o timeout activo
     const markup = this._generateMarkupAlertLoadingState();
@@ -31,13 +103,31 @@ class recipeView {
     this._showAlert();
   };
 
-  // Oculta el estado "cargando"
+  /**
+   * Hides the loading alert using an animation.
+   *
+   * @async
+   * @public
+   * @returns {Promise<void>}
+   * @description
+   * Runs a fade-out animation before clearing the container.
+   */
   hideAlertLoadingState = async () => {
     await this._fadeOut();
     this._clearAlert();
   };
 
-  // Renderiza una alerta de tipo específico
+  /**
+   * Renderiza una alerta del tipo especificado.
+   *
+   * @async
+   * @public
+   * @param {"success"|"info"|"error"} typeAlert - Tipo de alerta a mostrar.
+   * @returns {Promise<void>}
+   * @description
+   * Renderiza la alerta, ejecuta fade-in y programa su auto-ocultamiento
+   * a los 5 segundos. Cualquier alerta previa se cancela.
+   */
   renderAlert = async (typeAlert) => {
     this._clearAlert(); // Asegura que no se solape con otra alerta
 
@@ -53,7 +143,37 @@ class recipeView {
   };
 
   /**
+   * Renders a loading spinner in the recipe view.
    *
+   * @public
+   * @returns {void}
+   */
+  renderSpinner = () => {
+    this._spinner.classList.remove('hidden');
+    this._parentElment.innerHTML = '';
+    this._parentElment.appendChild(this._spinner);
+  };
+
+  /**
+   * Completely renders the data from a recipe.
+   *
+   * @public
+   * @param {Object} data - Formatted data from the model.
+   * @returns {void}
+   * @description Clears the main container and generates dynamic HTML.
+   */
+  render = (data) => {
+    this._data = data;
+    this._parentElment.innerHTML = '';
+    const markup = this._generateMarkup();
+    this._parentElment.insertAdjacentHTML('afterbegin', markup);
+  };
+
+  /**
+   * Visually displays the alert container.
+   *
+   * @private
+   * @returns {void}
    */
   _showAlert() {
     this._alertParentElement.classList.remove('hidden');
@@ -61,7 +181,11 @@ class recipeView {
   }
 
   /**
+   * Executes visual entry effect (fade-in).
    *
+   * @async
+   * @private
+   * @returns {Promise<void>}
    */
   async _fadeIn() {
     this._alertParentElement.classList.remove('hidden');
@@ -74,7 +198,11 @@ class recipeView {
   }
 
   /**
+   * Executes visual fade-out effect.
    *
+   * @async
+   * @private
+   * @returns {Promise<void>}
    */
   async _fadeOut() {
     if (this._isAnimating) return; // evita conflictos si ya está animando
@@ -88,7 +216,10 @@ class recipeView {
   }
 
   /**
+   * Waits for the CSS animation to finish.
    *
+   * @private
+   * @returns {Promise<void>}
    */
   async _waitForAnimationEnd() {
     return new Promise((resolve) => {
@@ -99,7 +230,10 @@ class recipeView {
   }
 
   /**
+   * Clears animation states, timeouts, and alert container content.
    *
+   * @private
+   * @returns {void}
    */
   _clearAlert() {
     // Cancela timeout previo
@@ -114,19 +248,13 @@ class recipeView {
     this._isAnimating = false;
   }
 
-  renderSpinner = () => {
-    this._spinner.classList.remove('hidden');
-    this._parentElment.innerHTML = '';
-    this._parentElment.appendChild(this._spinner);
-  };
-
-  render = (data) => {
-    this._data = data;
-    this._parentElment.innerHTML = '';
-    const markup = this._generateMarkup();
-    this._parentElment.insertAdjacentHTML('afterbegin', markup);
-  };
-
+  /**
+   * Generates the HTML for the complete recipe.
+   *
+   * @private
+   * @returns {string}
+   * @description Returns the complete recipe markup (image, meta, ingredients, author, etc.).
+   */
   _generateMarkup = () => {
     return `
       <article id="recipe-content" class="flex flex-col gap-8" aria-live="polite">
@@ -262,6 +390,13 @@ class recipeView {
     `;
   };
 
+  /**
+   * Generates the HTML for an alert based on its type.
+   *
+   * @private
+   * @param {“success”|"info"|“error”} type
+   * @returns {string}
+   */
   _generateMarkupAlert = (type) => {
     return `
      <article
@@ -339,6 +474,12 @@ class recipeView {
     `;
   };
 
+  /**
+   * Generates the HTML for the loading status.
+   *
+   * @private
+   * @returns {string}
+   */
   _generateMarkupAlertLoadingState = () => {
     return `
         <div

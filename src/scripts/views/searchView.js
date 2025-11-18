@@ -1,19 +1,26 @@
+import View from './View.js';
 /**
  *
  */
-class searchView {
+class searchView extends View {
   _data;
   _parentElement = document.getElementById('results-grid');
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
   _paginationElement = document.getElementById('pagination-controls');
 
+  // ---------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // ---------------------------------------------------------------------------
+
+  /*
   render = (data) => {
     this._data = data;
     const markup = this._generateMarkup(this._data);
     this._parentElement.innerHTML = markup;
     this._paginationElement.classList.remove('hidden');
   };
+*/
 
   addHandlerRender = (handler) => {
     this._form.addEventListener('submit', (e) => {
@@ -25,8 +32,8 @@ class searchView {
     });
   };
 
-  _generateMarkup = (data) => {
-    const markup = data
+  _generateMarkup = () => {
+    const markup = this._data
       .map((recipe) => {
         return `
             <a

@@ -6,11 +6,13 @@ class searchView {
   _parentElement = document.getElementById('results-grid');
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
+  _paginationElement = document.getElementById('pagination-controls');
 
   render = (data) => {
     this._data = data;
     const markup = this._generateMarkup(this._data);
     this._parentElement.innerHTML = markup;
+    this._paginationElement.classList.remove('hidden');
   };
 
   addHandlerRender = (handler) => {

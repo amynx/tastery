@@ -12,8 +12,9 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { loadRecipe } from './model.js';
+import { loadRecipe, getRecipes } from './model.js';
 import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 import { createIcons, icons } from 'lucide';
 
 /**
@@ -59,6 +60,19 @@ const controlRecipe = async function (id) {
   }
 };
 
+const controlSearchRecipe = async function (query) {
+  try {
+    // 1. Solictud
+    // 2. Formateando datos
+    const data = await getRecipes(query);
+    // 3. Generando marcado
+    // 4. Renderizando
+    searchView.render(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * Initializes the module by registering the necessary listeners to handle
  * the initial load and changes in the URL (`hashchange` event).
@@ -82,4 +96,6 @@ export const init = function () {
       controlRecipe(recipeId.slice(1));
     })
   );
+
+  searchView.addHandlerRender(controlSearchRecipe);
 };

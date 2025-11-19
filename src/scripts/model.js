@@ -35,7 +35,12 @@
  */
 const state = {
   recipe: {},
-  search: {},
+  search: {
+    query: '',
+    recipes: [],
+    totalPage: null,
+    currentPage: 1,
+  },
   bookmarks: {},
 };
 
@@ -84,14 +89,25 @@ export const loadRecipe = async function (id) {
   }
 };
 
-export const getRecipes = async function async(query) {
+export const getRecipes = async function async(currentPage = 1, query = state.search.query) {
   try {
+    state.search.query = query;
+    state.search.currentPage = currentPage;
+
     const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
     if (!res.ok) throw new Error('Error Connection');
     const { data } = await res.json();
+    console.log(data);
+
     if (!data.recipes.length) throw new Error('info');
 
-    const recipes = data.recipes.map((recipe) => {
+    // Paginacion
+    const start = (state.search.currentPage - 1) * 6;
+    const end = start + 6;
+
+    const recipes = data.recipes.slice(start, end);
+
+    const recipesFormatted = recipes.map((recipe) => {
       return {
         id: recipe.id,
         imageUrl: recipe.image_url,
@@ -100,10 +116,27 @@ export const getRecipes = async function async(query) {
       };
     });
 
-    state.search = recipes;
+    state.search.recipes = recipesFormatted;
     return state.search;
   } catch (error) {
     console.error('🚩Error while loading recipe:', error);
     throw error;
   }
 };
+
+/*
+
+
+
+1. mostrar resultados, renderizo cars
+2. renderizar paginacion 
+
+
+1. Obtengo numero de pagina -> Evento 
+Controlador Orquesta 
+2. Hacer solcitud en base a la Query actual 
+3. Corto el array
+4. formateo los datos 
+5. reasigno Recipes en el estado 
+6. Renderizo 
+*/

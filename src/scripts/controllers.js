@@ -13,6 +13,7 @@
  */
 
 import { loadRecipe, getRecipes } from './model.js';
+import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import { createIcons, icons } from 'lucide';
@@ -66,7 +67,7 @@ const controlSearchRecipe = async function (query) {
     searchView.renderAlertLoadingState();
     // 1. Solictud
     // 2. Formateando datos
-    const data = await getRecipes(query);
+    const data = await getRecipes(undefined, query);
 
     // ocultar alerta
     await searchView.hideAlertLoadingState();
@@ -75,12 +76,19 @@ const controlSearchRecipe = async function (query) {
     await searchView.renderAlert('success');
     // 3. Generando marcado
     // 4. Renderizando
-    searchView.render(data);
-    searchView.renderPagination();
+    searchView.render(data.recipes);
+    paginationView.render(data.currentPage);
   } catch (error) {
     await searchView.hideAlertLoadingState();
     await searchView.renderAlert(error.message);
   }
+};
+
+const controlPagination = async function (currentPage) {
+  // Solitud en base a la Query actual
+  const data = await getRecipes(currentPage);
+  searchView.render(data.recipes);
+  paginationView.render(data.currentPage);
 };
 
 /**
@@ -108,4 +116,5 @@ export const init = function () {
   );
 
   searchView.addHandlerRender(controlSearchRecipe);
+  paginationView.addHandlerChangePage(controlPagination);
 };

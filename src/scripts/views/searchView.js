@@ -7,7 +7,6 @@ class searchView extends View {
   _parentElement = document.getElementById('results-grid');
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
-  _paginationElement = document.getElementById('pagination-controls');
   _typeAlert = {
     success: {
       title: 'Recipes found!',
@@ -28,9 +27,6 @@ class searchView extends View {
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
   // ---------------------------------------------------------------------------
-  renderPagination = () => {
-    this._paginationElement.classList.remove('hidden');
-  };
 
   addHandlerRender = (handler) => {
     this._form.addEventListener('submit', (e) => {

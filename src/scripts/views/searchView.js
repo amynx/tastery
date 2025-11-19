@@ -12,15 +12,9 @@ class searchView extends View {
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
   // ---------------------------------------------------------------------------
-
-  /*
-  render = (data) => {
-    this._data = data;
-    const markup = this._generateMarkup(this._data);
-    this._parentElement.innerHTML = markup;
+  renderPagination = () => {
     this._paginationElement.classList.remove('hidden');
   };
-*/
 
   addHandlerRender = (handler) => {
     this._form.addEventListener('submit', (e) => {

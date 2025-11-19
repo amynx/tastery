@@ -68,6 +68,7 @@ const controlSearchRecipe = async function (query) {
     // 3. Generando marcado
     // 4. Renderizando
     searchView.render(data);
+    searchView.renderPagination();
   } catch (error) {
     console.log(error);
   }

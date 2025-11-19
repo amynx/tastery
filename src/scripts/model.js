@@ -85,19 +85,25 @@ export const loadRecipe = async function (id) {
 };
 
 export const getRecipes = async function async(query) {
-  const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
-  if (!res.ok) throw new Error('Error Connection');
-  const { data } = await res.json();
+  try {
+    const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
+    if (!res.ok) throw new Error('Error Connection');
+    const { data } = await res.json();
+    if (!data.recipes.length) throw new Error('info');
 
-  const recipes = data.recipes.map((recipe) => {
-    return {
-      id: recipe.id,
-      imageUrl: recipe.image_url,
-      title: recipe.title,
-      publisher: recipe.publisher,
-    };
-  });
+    const recipes = data.recipes.map((recipe) => {
+      return {
+        id: recipe.id,
+        imageUrl: recipe.image_url,
+        title: recipe.title,
+        publisher: recipe.publisher,
+      };
+    });
 
-  state.search = recipes;
-  return state.search;
+    state.search = recipes;
+    return state.search;
+  } catch (error) {
+    console.error('🚩Error while loading recipe:', error);
+    throw error;
+  }
 };

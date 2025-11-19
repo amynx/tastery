@@ -62,15 +62,24 @@ const controlRecipe = async function (id) {
 
 const controlSearchRecipe = async function (query) {
   try {
+    // Mostrar alerta
+    searchView.renderAlertLoadingState();
     // 1. Solictud
     // 2. Formateando datos
     const data = await getRecipes(query);
+
+    // ocultar alerta
+    await searchView.hideAlertLoadingState();
+
+    //mostrar alerta
+    await searchView.renderAlert('success');
     // 3. Generando marcado
     // 4. Renderizando
     searchView.render(data);
     searchView.renderPagination();
   } catch (error) {
-    console.log(error);
+    await searchView.hideAlertLoadingState();
+    await searchView.renderAlert(error.message);
   }
 };
 

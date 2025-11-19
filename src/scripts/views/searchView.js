@@ -8,6 +8,22 @@ class searchView extends View {
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
   _paginationElement = document.getElementById('pagination-controls');
+  _typeAlert = {
+    success: {
+      title: 'Recipes found!',
+      description:
+        'We’ve found delicious recipes based on your ingredient. Enjoy exploring the options!',
+    },
+    info: {
+      title: 'No recipes found for that ingredient',
+      description:
+        'Try using a different ingredient or refining your search to discover more recipe options.',
+    },
+    error: {
+      title: 'Unable to search for recipes!',
+      description: `It seems there was an issue connecting to the server. Please try again or check your internet connection.`,
+    },
+  };
 
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
@@ -20,8 +36,11 @@ class searchView extends View {
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = this._input.value;
-      if (!query) return;
-
+      if (!query) {
+        this._input.value = '';
+        return;
+      }
+      this._input.value = '';
       handler(query);
     });
   };

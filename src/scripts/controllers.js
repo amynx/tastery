@@ -12,7 +12,7 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { loadRecipe, updatePage, loadSearchResults } from './model.js';
+import { searchService, loadRecipe } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -36,7 +36,7 @@ import { createIcons, icons } from 'lucide';
  *
  * In case of error, an error alert is displayed and logged to the console.
  */
-const controlRecipe = async function (id) {
+const controlLoadRecipe = async function (id) {
   try {
     // Render status alerts
     recipeView.renderAlertLoadingState();
@@ -67,7 +67,7 @@ const controlSearchRecipe = async function (query) {
     searchView.renderAlertLoadingState();
     // 1. Solictud
     // 2. Formateando datos
-    const data = await loadSearchResults(query);
+    const data = await searchService.search(query);
 
     // ocultar alerta
     await searchView.hideAlertLoadingState();
@@ -86,8 +86,7 @@ const controlSearchRecipe = async function (query) {
 
 const controlPagination = async function (currentPage) {
   // Solitud en base a la Query actual
-  const data = await updatePage(currentPage);
-  console.log(data);
+  const data = await searchService.goToPage(currentPage);
 
   searchView.render(data.recipes);
   paginationView.render(data);
@@ -113,7 +112,7 @@ export const init = function () {
     window.addEventListener(e, () => {
       const recipeId = window.location.hash;
       if (!recipeId) return;
-      controlRecipe(recipeId.slice(1));
+      controlLoadRecipe(recipeId.slice(1));
     })
   );
 

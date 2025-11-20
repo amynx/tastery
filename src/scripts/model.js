@@ -4,6 +4,11 @@
  * Module responsible for managing and storing the global state of the application.
  * Includes functions for loading recipes from the external API and normalizing data.
  */
+import { URL_API } from './config.js';
+import SearchService from './services/searchService.js';
+
+// Instancia del servicio
+export const searchService = new SearchService(URL_API);
 
 /**
  * @typedef {Object} Ingredient
@@ -35,7 +40,7 @@
  */
 const state = {
   recipe: {},
-  search: {},
+  search: searchService.state,
   bookmarks: {},
 };
 

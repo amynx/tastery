@@ -12,8 +12,10 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { loadRecipe } from './model.js';
+import { searchService, loadRecipe } from './model.js';
+import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 import { createIcons, icons } from 'lucide';
 
 /**
@@ -34,7 +36,7 @@ import { createIcons, icons } from 'lucide';
  *
  * In case of error, an error alert is displayed and logged to the console.
  */
-const controlRecipe = async function (id) {
+const controlLoadRecipe = async function (id) {
   try {
     // Render status alerts
     recipeView.renderAlertLoadingState();
@@ -59,6 +61,37 @@ const controlRecipe = async function (id) {
   }
 };
 
+const controlSearchRecipe = async function (query) {
+  try {
+    // Mostrar alerta
+    searchView.renderAlertLoadingState();
+    // 1. Solictud
+    // 2. Formateando datos
+    const data = await searchService.search(query);
+
+    // ocultar alerta
+    await searchView.hideAlertLoadingState();
+
+    //mostrar alerta
+    await searchView.renderAlert('success');
+    // 3. Generando marcado
+    // 4. Renderizando
+    searchView.render(data.recipes);
+    paginationView.render(data);
+  } catch (error) {
+    await searchView.hideAlertLoadingState();
+    await searchView.renderAlert(error.message);
+  }
+};
+
+const controlPagination = async function (currentPage) {
+  // Solitud en base a la Query actual
+  const data = await searchService.goToPage(currentPage);
+
+  searchView.render(data.recipes);
+  paginationView.render(data);
+};
+
 /**
  * Initializes the module by registering the necessary listeners to handle
  * the initial load and changes in the URL (`hashchange` event).
@@ -79,7 +112,10 @@ export const init = function () {
     window.addEventListener(e, () => {
       const recipeId = window.location.hash;
       if (!recipeId) return;
-      controlRecipe(recipeId.slice(1));
+      controlLoadRecipe(recipeId.slice(1));
     })
   );
+
+  searchView.addHandlerRender(controlSearchRecipe);
+  paginationView.addHandlerChangePage(controlPagination);
 };

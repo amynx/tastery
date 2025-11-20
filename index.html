@@ -41,27 +41,62 @@
         <a class="text-lg font-bold uppercase">Tastery</a>
       </div>
 
-      <!-- ======================== SEARCH BAR ======================== -->
-      <!-- @element SearchBar -->
+      <!-- ========================================================================================= -->
+      <!-- @section SearchForm -->
       <!-- @description
-       Centered search input located slightly away from the logo (not too close).
-       Visible only on desktop and larger screens.
+  Semantic search form used for querying content within the application.
+  The form adapts its max-width depending on screen size, ensuring balanced layout composition.
+  - Tablet screens: occupies up to 40% of available horizontal space.
+  - Desktop and larger screens: constrained to a maximum of 35% for a more compact design.
+-->
+      <!-- @responsive
+  Hidden on mobile. Visible on md+ screens with responsive max-width rules.
+-->
+      <!-- ========================================================================================= -->
+
+      <form
+        id="primary-search-form"
+        role="search"
+        aria-label="Primary search"
+        class="hidden md:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
+      >
+        <!-- ======================== SEARCH BAR ======================== -->
+        <!-- @element SearchBar -->
+        <!-- @description
+    Search bar with icon and input field.
+    Styled using DaisyUI's input component. 
+    Automatically grows to fill the allowed container width.
   -->
-      <label class="input hidden md:flex items-center gap-2 ml-8">
-        <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <g
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2.5"
-            fill="none"
-            stroke="currentColor"
+        <label class="input flex items-center gap-2 w-full">
+          <svg
+            class="h-[1em] opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
           >
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </g>
-        </svg>
-        <input type="search" required placeholder="Search" />
-      </label>
+            <g
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+
+          <input
+            id="input-search-form"
+            type="search"
+            placeholder="Search"
+            required
+            aria-label="Search query"
+            class="w-full"
+          />
+        </label>
+      </form>
 
       <!-- ======================== ACTIONS ======================== -->
       <!-- @element Actions -->
@@ -204,6 +239,65 @@
           role="list"
           aria-label="Search results"
         >
+          <!-- ========================================================================================= -->
+          <!-- @section EmptySearchState -->
+          <!-- @description
+  This component displays an informative empty state message inside the search results container
+  when no searches have been performed yet. It guides the user by explaining that results will appear
+  here once a search is made. It is meant to replace the results list before any interaction.
+-->
+          <!-- @responsive
+  Fully responsive. The layout stays centered and stacked (vertical) on all breakpoints.
+-->
+          <!-- ========================================================================================= -->
+
+          <div
+            id="results-grid"
+            class="flex flex-col justify-start items-center flex-grow w-full gap-6 mt-2 p-2 overflow-y-auto"
+            role="list"
+            aria-label="Search results"
+          >
+            <!-- ======================== EMPTY STATE WRAPPER ======================== -->
+            <!-- @element EmptyStateWrapper -->
+            <!-- @description
+    Wraps the content of the empty-state message. It centers the message block and ensures
+    consistent spacing. This block is visible only if no searches have been performed.
+  -->
+            <!-- @state empty -->
+            <section
+              id="empty-search-state"
+              class="flex flex-col items-center justify-center w-full max-w-md text-center"
+              role="status"
+              aria-live="polite"
+            >
+              <!-- ======================== EMPTY ICON ======================== -->
+              <!-- @element EmptyIcon -->
+              <!-- @description
+      Decorative icon indicating the absence of results. Uses DaisyUI's `text-base-content/40`
+      utility class for a subtle, non-distracting presence.
+    -->
+              <div class="text-5xl text-base-content/40 mb-4" aria-hidden="true">🔍</div>
+
+              <!-- ======================== TITLE ======================== -->
+              <!-- @element EmptyTitle -->
+              <!-- @description
+      Primary message informing the user that no searches have been made yet. Uses DaisyUI text
+      utilities for clarity and hierarchy.
+    -->
+              <h2 class="text-lg font-semibold text-base-content">No searches performed yet</h2>
+
+              <!-- ======================== DESCRIPTION ======================== -->
+              <!-- @element EmptyDescription -->
+              <!-- @description
+      Secondary description that tells the user why no results are shown. Encourages them to start
+      searching to populate this section.
+    -->
+              <p class="text-base text-base-content/70 mt-2">
+                Your search results will appear here once you start exploring recipes.
+              </p>
+            </section>
+          </div>
+
           <!-- ======================== CARD ITEM ======================== -->
           <!-- @element ResultCard -->
           <!-- @description
@@ -211,34 +305,9 @@
       -->
 
           <a
+            id="card-item"
             href="#664c8f193e7aa067e94e863f"
-            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
-            role="listitem"
-          >
-            <div class="card-body flex flex-row items-center gap-4 p-4">
-              <!-- Thumbnail -->
-              <figure class="shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&q=80&w=710"
-                  alt="Result thumbnail"
-                  class="rounded-full w-16 h-16 object-cover"
-                  loading="lazy"
-                />
-              </figure>
-
-              <!-- Text Content -->
-              <div class="flex flex-col justify-center">
-                <h2 class="card-title text-base font-semibold uppercase line-clamp-2">
-                  EXAMPLE RESULT TITLE GOES HERE
-                </h2>
-                <p class="text-sm text-gray-500 capitalize">By Author Or Source</p>
-              </div>
-            </div>
-          </a>
-
-          <a
-            href="#664c8f193e7aa067e94e8ad4"
-            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
+            class="hidden card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
             role="listitem"
           >
             <div class="card-body flex flex-row items-center gap-4 p-4">
@@ -276,13 +345,13 @@
           role="navigation"
           aria-label="Pagination"
         >
-          <div class="join">
+          <!--div id="pagination-container" class="join">
             <button class="join-item btn btn-outline" aria-label="Previous page">«</button>
             <button class="join-item btn btn-outline btn-active" aria-current="page">1</button>
             <button class="join-item btn btn-outline">2</button>
             <button class="join-item btn btn-outline">3</button>
             <button class="join-item btn btn-outline" aria-label="Next page">»</button>
-          </div>
+          </-div-->
         </nav>
       </section>
 

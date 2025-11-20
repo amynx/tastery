@@ -12,7 +12,7 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { loadRecipe, getRecipes } from './model.js';
+import { loadRecipe, updatePage, loadSearchResults } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -67,7 +67,7 @@ const controlSearchRecipe = async function (query) {
     searchView.renderAlertLoadingState();
     // 1. Solictud
     // 2. Formateando datos
-    const data = await getRecipes(undefined, query);
+    const data = await loadSearchResults(query);
 
     // ocultar alerta
     await searchView.hideAlertLoadingState();
@@ -77,7 +77,7 @@ const controlSearchRecipe = async function (query) {
     // 3. Generando marcado
     // 4. Renderizando
     searchView.render(data.recipes);
-    paginationView.render(data.currentPage);
+    paginationView.render(data);
   } catch (error) {
     await searchView.hideAlertLoadingState();
     await searchView.renderAlert(error.message);
@@ -86,9 +86,11 @@ const controlSearchRecipe = async function (query) {
 
 const controlPagination = async function (currentPage) {
   // Solitud en base a la Query actual
-  const data = await getRecipes(currentPage);
+  const data = await updatePage(currentPage);
+  console.log(data);
+
   searchView.render(data.recipes);
-  paginationView.render(data.currentPage);
+  paginationView.render(data);
 };
 
 /**

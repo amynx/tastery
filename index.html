@@ -298,40 +298,97 @@
             </section>
           </div>
 
-          <!-- ======================== CARD ITEM ======================== -->
-          <!-- @element ResultCard -->
+          <!-- ========================================================================================= -->
+          <!-- @section ResultCardContainer -->
           <!-- @description
-        Represents a single search result item showing an image, title, and author/source.
-      -->
+  Represents a single interactive result card used to display a recipe result.
+  This card includes an image, title, and author/source information.  
+  An Indicator component is positioned in the top-right corner when the recipe
+  is selected for viewing. The Indicator remains visible only in the "selected" state.
+-->
+          <!-- @responsive
+  Full-width on mobile. Scales naturally on larger screens. Always keeps the Indicator aligned
+  to the top-right corner regardless of screen size.
+-->
+          <!-- ========================================================================================= -->
 
           <a
             id="card-item"
             href="#664c8f193e7aa067e94e863f"
-            class="hidden card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
+            class="relative card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-200 w-full cursor-pointer"
             role="listitem"
+            aria-label="View recipe details"
           >
+            <!-- ======================== CARD SELECTION INDICATOR ======================== -->
+            <!-- @element SelectionIndicator -->
+            <!-- @description
+    Displays a visual indicator when the card is marked as "selected".
+    Positioned absolutely in the top-right corner of the card.
+    Uses DaisyUI's `indicator` pattern to visually highlight active/selected items.
+  -->
+            <!-- @state
+    Visible only when the card has the state `.selected` applied externally.
+    Example: <a class="card selected">...</a>
+  -->
+            <!-- @note
+    Replace `indicator-item badge` with any DaisyUI component that matches your UI system.
+  -->
+            <div
+              class="hidden indicator absolute top-2 right-15 pointer-events-none"
+              aria-hidden="true"
+            >
+              <span
+                class="indicator-item badge badge-primary text-xs font-semibold shadow-md"
+                role="status"
+              >
+                Selected
+              </span>
+            </div>
+
+            <!-- ======================== CARD ITEM ======================== -->
+            <!-- @element ResultCard -->
+            <!-- @description
+    Represents the internal layout of the card including thumbnail and text content.
+    The card is structured in horizontal layout: image on the left, text block on the right.
+  -->
+
             <div class="card-body flex flex-row items-center gap-4 p-4">
-              <!-- Thumbnail -->
+              <!-- ======================== THUMBNAIL ======================== -->
+              <!-- @element Thumbnail -->
+              <!-- @description
+      Shows the preview image of the recipe result.  
+      Rounded shape for aesthetic consistency.  
+      Uses lazy loading for performance optimization.
+    -->
               <figure class="shrink-0">
                 <img
                   src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&q=80&w=710"
-                  alt="Result thumbnail"
+                  alt="Recipe thumbnail"
                   class="rounded-full w-16 h-16 object-cover"
                   loading="lazy"
                 />
               </figure>
 
-              <!-- Text Content -->
+              <!-- ======================== TEXT CONTENT ======================== -->
+              <!-- @element TextContent -->
+              <!-- @description
+      Contains the title and author/source of the recipe.
+      Text is vertically centered and spaced for readability.
+    -->
               <div class="flex flex-col justify-center">
-                <h2 class="card-title text-base font-semibold uppercase line-clamp-2">
+                <h2
+                  class="card-title text-base font-semibold uppercase line-clamp-2"
+                  aria-label="Recipe title"
+                >
                   EXAMPLE RESULT TITLE GOES HERE
                 </h2>
-                <p class="text-sm text-gray-500 capitalize">By Author Or Source</p>
+
+                <p class="text-sm text-gray-500 capitalize" aria-label="Recipe source">
+                  By Author Or Source
+                </p>
               </div>
             </div>
           </a>
-
-          <!-- @note Repeat ResultCard dynamically based on search results. -->
         </div>
 
         <!-- ======================== PAGINATION ======================== -->

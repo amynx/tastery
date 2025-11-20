@@ -4,6 +4,11 @@
  * Module responsible for managing and storing the global state of the application.
  * Includes functions for loading recipes from the external API and normalizing data.
  */
+import { URL_API } from './config.js';
+import SearchService from './services/searchService.js';
+
+// Instancia del servicio
+export const searchService = new SearchService(URL_API);
 
 /**
  * @typedef {Object} Ingredient
@@ -35,12 +40,7 @@
  */
 const state = {
   recipe: {},
-  search: {
-    query: '',
-    recipes: [],
-    totalPage: null,
-    currentPage: 1,
-  },
+  search: searchService.state,
   bookmarks: {},
 };
 
@@ -83,76 +83,6 @@ export const loadRecipe = async function (id) {
 
     state.recipe = recipe;
     return state.recipe;
-  } catch (error) {
-    console.error('🚩Error while loading recipe:', error);
-    throw error;
-  }
-};
-
-/*
-Solcitud con validaciones 
-Páginacion (Cortar arreglo de recetas en base al numero de pagina)
-Formatear datos
-Actualizar estado de Busqueda 
-*/
-
-const formatSearchResultData = function (data) {
-  return data.map((recipe) => {
-    return {
-      id: recipe.id,
-      imageUrl: recipe.image_url,
-      title: recipe.title,
-      publisher: recipe.publisher,
-    };
-  });
-};
-
-const getPage = function (recipes) {
-  const start = (state.search.currentPage - 1) * 6;
-  const end = start + 6;
-  const page = recipes.slice(start, end);
-  return page;
-};
-
-const getRecipes = async function (query) {
-  const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
-  if (!res.ok) throw new Error('Error Connection');
-  const { data } = await res.json();
-  if (!data.recipes.length) throw new Error('info');
-  return data;
-};
-
-export const updatePage = async function (currentPage) {
-  state.search.currentPage = currentPage;
-  const data = await getRecipes(state.search.query);
-  const recipes = getPage(data.recipes);
-  const recipesFormat = formatSearchResultData(recipes);
-
-  // Actualizar estado
-  state.search.recipes = recipesFormat;
-  return state.search;
-};
-
-export const loadSearchResults = async function (query = state.search.query) {
-  try {
-    // Actualizar estado
-    //state.search.currentPage = currentPage;
-    state.search.query = query;
-
-    // hacer solicutud
-    const data = await getRecipes(query);
-    console.log(data);
-
-    // cargar numero de paginas
-    state.search.totalPage = Math.ceil(data.recipes.length / 6);
-    console.log(Math.ceil(data.recipes.length / 6));
-
-    const recipes = getPage(data.recipes);
-    const recipesFormat = formatSearchResultData(recipes);
-
-    // Actualizar estado
-    state.search.recipes = recipesFormat;
-    return state.search;
   } catch (error) {
     console.error('🚩Error while loading recipe:', error);
     throw error;

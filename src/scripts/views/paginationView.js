@@ -25,9 +25,7 @@ class paginationView extends View {
   };
 
   _generateMarkup = () => {
-    console.log(this._data);
-
-    if (this._data.totalPage === 1) {
+    if (this._data.totalPages === 1) {
       return `
          <div id="pagination-container" class="join">
             <button class="join-item btn btn-outline">${this._data.currentPage}</button>
@@ -35,7 +33,7 @@ class paginationView extends View {
     `;
     }
 
-    if (this._data.currentPage === this._data.totalPage) {
+    if (this._data.currentPage === this._data.totalPages) {
       return `
          <div id="pagination-container" class="join">
             <button class="join-item btn btn-outline" aria-label="Previous page">«</button>
@@ -54,7 +52,7 @@ class paginationView extends View {
     `;
     }
 
-    if (this._data.totalPage > 1) {
+    if (this._data.totalPages > 1) {
       return `
          <div id="pagination-container" class="join">
             <button class="join-item btn btn-outline">${this._data.currentPage}</button>

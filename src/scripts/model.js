@@ -89,54 +89,72 @@ export const loadRecipe = async function (id) {
   }
 };
 
-export const getRecipes = async function async(currentPage = 1, query = state.search.query) {
-  try {
-    state.search.query = query;
-    state.search.currentPage = currentPage;
+/*
+Solcitud con validaciones 
+Páginacion (Cortar arreglo de recetas en base al numero de pagina)
+Formatear datos
+Actualizar estado de Busqueda 
+*/
 
-    const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
-    if (!res.ok) throw new Error('Error Connection');
-    const { data } = await res.json();
+const formatSearchResultData = function (data) {
+  return data.map((recipe) => {
+    return {
+      id: recipe.id,
+      imageUrl: recipe.image_url,
+      title: recipe.title,
+      publisher: recipe.publisher,
+    };
+  });
+};
+
+const getPage = function (recipes) {
+  const start = (state.search.currentPage - 1) * 6;
+  const end = start + 6;
+  const page = recipes.slice(start, end);
+  return page;
+};
+
+const getRecipes = async function (query) {
+  const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/?search=${query}`);
+  if (!res.ok) throw new Error('Error Connection');
+  const { data } = await res.json();
+  if (!data.recipes.length) throw new Error('info');
+  return data;
+};
+
+export const updatePage = async function (currentPage) {
+  state.search.currentPage = currentPage;
+  const data = await getRecipes(state.search.query);
+  const recipes = getPage(data.recipes);
+  const recipesFormat = formatSearchResultData(recipes);
+
+  // Actualizar estado
+  state.search.recipes = recipesFormat;
+  return state.search;
+};
+
+export const loadSearchResults = async function (query = state.search.query) {
+  try {
+    // Actualizar estado
+    //state.search.currentPage = currentPage;
+    state.search.query = query;
+
+    // hacer solicutud
+    const data = await getRecipes(query);
     console.log(data);
 
-    if (!data.recipes.length) throw new Error('info');
+    // cargar numero de paginas
+    state.search.totalPage = Math.ceil(data.recipes.length / 6);
+    console.log(Math.ceil(data.recipes.length / 6));
 
-    // Paginacion
-    const start = (state.search.currentPage - 1) * 6;
-    const end = start + 6;
+    const recipes = getPage(data.recipes);
+    const recipesFormat = formatSearchResultData(recipes);
 
-    const recipes = data.recipes.slice(start, end);
-
-    const recipesFormatted = recipes.map((recipe) => {
-      return {
-        id: recipe.id,
-        imageUrl: recipe.image_url,
-        title: recipe.title,
-        publisher: recipe.publisher,
-      };
-    });
-
-    state.search.recipes = recipesFormatted;
+    // Actualizar estado
+    state.search.recipes = recipesFormat;
     return state.search;
   } catch (error) {
     console.error('🚩Error while loading recipe:', error);
     throw error;
   }
 };
-
-/*
-
-
-
-1. mostrar resultados, renderizo cars
-2. renderizar paginacion 
-
-
-1. Obtengo numero de pagina -> Evento 
-Controlador Orquesta 
-2. Hacer solcitud en base a la Query actual 
-3. Corto el array
-4. formateo los datos 
-5. reasigno Recipes en el estado 
-6. Renderizo 
-*/

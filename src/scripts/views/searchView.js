@@ -23,7 +23,44 @@ class searchView extends View {
       description: `It seems there was an issue connecting to the server. Please try again or check your internet connection.`,
     },
   };
+  _markupIndicator = `
+       <div
+              class="indicator absolute top-2 right-8 pointer-events-none"
+              aria-hidden="true"
+            >
+              <span
+                class="indicator-item badge badge-primary text-[11px] font-semibold shadow-md"
+                role="status"
+              >
+                Selected
+              </span>
+            </div>
+    `;
 
+  /**
+   *
+   */
+  constructor() {
+    super();
+
+    this._parentElement.addEventListener('click', (e) => {
+      // Obtengo todas las cards
+      const cards = this._parentElement.querySelectorAll('#card-item');
+
+      // Retiro indicator de todas las cards si existe
+      cards.forEach((card) => {
+        const indicatorElement = card.querySelector('.indicator');
+        if (indicatorElement) indicatorElement.remove();
+      });
+
+      // Encuentro la card cliqueada (su <a> padre)
+      const cardElement = e.target.closest('#card-item');
+      if (!cardElement) return; // click fuera de una card
+
+      // Inserto indicator en la card cliqueada
+      cardElement.insertAdjacentHTML('afterbegin', this._markupIndicator);
+    });
+  }
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
   // ---------------------------------------------------------------------------

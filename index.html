@@ -491,7 +491,7 @@
                 SERVINGS
               </label>
               <div class="join">
-                <button class="btn btn-sm join-item" aria-label="Decrease servings">
+                <button id="btn-decrease-servings" class="btn btn-sm join-item" aria-label="Decrease servings">
                   <i data-lucide="minus" class="w-4 h-4"></i>
                 </button>
                 <input
@@ -502,7 +502,7 @@
                   class="input input-sm join-item text-center w-16"
                   aria-live="polite"
                 />
-                <button class="btn btn-sm join-item" aria-label="Increase servings">
+                <button id="btn-increase-servings" class="btn btn-sm join-item" aria-label="Increase servings">
                   <i data-lucide="plus" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -535,7 +535,11 @@
               RECIPE INGREDIENTS
             </h2>
 
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none" role="list">
+            <ul
+              list-ingredients
+              class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none"
+              role="list"
+            >
               <li class="flex items-center gap-3">
                 <i data-lucide="check" class="w-5 h-5 text-success"></i>
                 <span class="capitalize">200 g Flour</span>

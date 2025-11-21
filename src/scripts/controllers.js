@@ -12,7 +12,7 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { searchService, loadRecipe } from './model.js';
+import { searchService, loadRecipe, updateServings } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -59,6 +59,17 @@ const controlLoadRecipe = async function (id) {
     await recipeView.renderAlert('error');
     console.error(error);
   }
+};
+
+const controlUpdateServings = (newServings) => {
+  // 1. Update recipe data (servings + ingredients)
+  const ingredients = updateServings(newServings);
+
+  // 2. Render updated ingredients in the view
+  recipeView.renderIngredients(ingredients);
+
+  // 3. Re-render icons (for lucide)
+  createIcons({ icons });
 };
 
 const controlSearchRecipe = async function (query) {
@@ -118,4 +129,5 @@ export const init = function () {
 
   searchView.addHandlerRender(controlSearchRecipe);
   paginationView.addHandlerChangePage(controlPagination);
+  recipeView.addHandlerUpdateServings(controlUpdateServings);
 };

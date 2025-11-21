@@ -1,3 +1,4 @@
+import Fraction from 'fraction.js';
 import View from './View.js';
 
 /**
@@ -31,6 +32,42 @@ class recipeView extends View {
 
   _data;
   _parentElement = document.getElementById('recipe-detail');
+
+  addHandlerUpdateServings = (handler) => {
+    this._parentElement.addEventListener('click', (e) => {
+      const input = document.getElementById('servings');
+      const current = Number(input.value);
+
+      const isDecrease = e.target.closest('#btn-decrease-servings');
+      const isIncrease = e.target.closest('#btn-increase-servings');
+
+      if (!isDecrease && !isIncrease) return;
+
+      const newValue = isDecrease ? Math.max(1, current - 1) : current + 1;
+
+      input.value = newValue;
+      handler(newValue);
+    });
+  };
+
+  // Renders the ingredient list in the DOM
+  renderIngredients = (ingredients) => {
+    const listEl = document.getElementById('list-ingredients');
+
+    listEl.innerHTML = ingredients.map((ing) => this._generateIngredientMarkup(ing)).join('');
+  };
+
+  // Generates markup for a single ingredient
+  _generateIngredientMarkup = (ing) => {
+    const quantity = ing.quantity ? new Fraction(ing.quantity).toFraction(true) : '';
+
+    return `
+    <li class="flex items-center gap-3">
+      <i data-lucide="check" class="w-5 h-5 text-success"></i>
+      <span class="capitalize">${quantity} ${ing.unit} ${ing.description}</span>
+    </li>
+  `;
+  };
 
   /**
    * Generates the HTML for the complete recipe.
@@ -85,7 +122,7 @@ class recipeView extends View {
                 SERVINGS
               </label>
               <div class="join">
-                <button class="btn btn-sm join-item" aria-label="Decrease servings">
+                <button id="btn-decrease-servings" class="btn btn-sm join-item" aria-label="Decrease servings">
                   <i data-lucide="minus" class="w-4 h-4"></i>
                 </button>
                 <input
@@ -95,8 +132,9 @@ class recipeView extends View {
                   min="1"
                   class="input input-sm join-item text-center w-16"
                   aria-live="polite"
+                  readonly  
                 />
-                <button class="btn btn-sm join-item" aria-label="Increase servings">
+                <button id="btn-increase-servings" class="btn btn-sm join-item" aria-label="Increase servings">
                   <i data-lucide="plus" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -129,12 +167,15 @@ class recipeView extends View {
               RECIPE INGREDIENTS
             </h2>
 
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none" role="list">
+            <ul id="list-ingredients" class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none" role="list">
               ${this._data.ingredients
                 .map((ing) => {
+                  const quantity = ing.quantity
+                    ? new Fraction(ing.quantity).toFraction(true) // convierte solo la cantidad
+                    : '';
                   return `<li class="flex items-center gap-3">
                     <i data-lucide="check" class="w-5 h-5 text-success"></i>
-                    <span class="capitalize">${ing.quantity ? ing.quantity : ''} ${ing.unit} ${ing.description}Flour</span>
+                    <span class="capitalize">${quantity ? quantity : ''} ${ing.unit} ${ing.description}Flour</span>
                   </li>`;
                 })
                 .join(' ')}

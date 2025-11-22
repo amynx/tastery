@@ -33,6 +33,17 @@ class recipeView extends View {
   _data;
   _parentElement = document.getElementById('recipe-detail');
 
+  addHandlerChangeUrl = (handler) => {
+    const events = ['load', 'hashchange'];
+    events.forEach((e) =>
+      window.addEventListener(e, () => {
+        const recipeId = window.location.hash;
+        if (!recipeId) return;
+        handler(recipeId.slice(1));
+      })
+    );
+  };
+
   addHandlerSaveRecipe = (handler) => {
     this._parentElement.addEventListener('click', (e) => {
       const isbtnSaveRecipe = e.target.closest('#save-recipe-btn');
@@ -157,12 +168,12 @@ class recipeView extends View {
             <div>
               <button
                 id="save-recipe-btn"
-                class="btn btn-outline btn-primary gap-2 uppercase"
+                class="btn ${this._data.isMarked ? '' : 'btn-outline'} btn-primary gap-2 uppercase"
                 aria-pressed="false"
                 aria-label="Save recipe"
               >
                 <i data-lucide="bookmark" class="w-5 h-5"></i>
-                SAVE RECIPE
+                ${this._data.isMarked ? 'SAVED RECIPE' : 'SAVE RECIPE'}
               </button>
             </div>
           </div>

@@ -120,11 +120,13 @@
               Saved
             </div>
             <ul
+              id="list-bookmarks"
               tabindex="-1"
-              class="menu dropdown-content bg-base-200 rounded-box z-10 mt-4 w-52 p-2 shadow-sm"
+              class="menu dropdown-content bg-base-200 rounded-box z-10 mt-4 w-max max-w-xs md:max-w-sm lg:max-w-md p-2 shadow-sm overflow-visible flex flex-col items-start gap-y-2"
             >
-              <li><a>Recipe 1</a></li>
-              <li><a>Recipe 2</a></li>
+              <!--li>
+                <a>Recipe 1</a>
+              </li-->
             </ul>
           </div>
         </div>
@@ -491,7 +493,11 @@
                 SERVINGS
               </label>
               <div class="join">
-                <button id="btn-decrease-servings" class="btn btn-sm join-item" aria-label="Decrease servings">
+                <button
+                  id="btn-decrease-servings"
+                  class="btn btn-sm join-item"
+                  aria-label="Decrease servings"
+                >
                   <i data-lucide="minus" class="w-4 h-4"></i>
                 </button>
                 <input
@@ -502,7 +508,11 @@
                   class="input input-sm join-item text-center w-16"
                   aria-live="polite"
                 />
-                <button id="btn-increase-servings" class="btn btn-sm join-item" aria-label="Increase servings">
+                <button
+                  id="btn-increase-servings"
+                  class="btn btn-sm join-item"
+                  aria-label="Increase servings"
+                >
                   <i data-lucide="plus" class="w-4 h-4"></i>
                 </button>
               </div>

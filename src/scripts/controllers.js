@@ -126,17 +126,9 @@ const controlPagination = async function (currentPage) {
  * If there is no ID in the hash, nothing is executed.
  */
 export const init = function () {
-  const events = ['load', 'hashchange'];
-  events.forEach((e) =>
-    window.addEventListener(e, () => {
-      const recipeId = window.location.hash;
-      if (!recipeId) return;
-      controlLoadRecipe(recipeId.slice(1));
-    })
-  );
-
   searchView.addHandlerRender(controlSearchRecipe);
   paginationView.addHandlerChangePage(controlPagination);
+  recipeView.addHandlerChangeUrl(controlLoadRecipe);
   recipeView.addHandlerUpdateServings(controlUpdateServings);
   recipeView.addHandlerSaveRecipe(controlSaveRecipe);
 };

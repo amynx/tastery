@@ -12,10 +12,11 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { searchService, loadRecipe, updateServings } from './model.js';
+import { searchService, loadRecipe, updateServings, addRecipeBookmarks } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import BookmarksView from './views/bookmarksView.js';
 import { createIcons, icons } from 'lucide';
 
 /**
@@ -69,6 +70,13 @@ const controlUpdateServings = (newServings) => {
   recipeView.renderIngredients(ingredients);
 
   // 3. Re-render icons (for lucide)
+  createIcons({ icons });
+};
+
+const controlSaveRecipe = (marked) => {
+  const bookmarks = addRecipeBookmarks(marked);
+  BookmarksView.render(bookmarks);
+  // Render SVG icons
   createIcons({ icons });
 };
 
@@ -130,4 +138,5 @@ export const init = function () {
   searchView.addHandlerRender(controlSearchRecipe);
   paginationView.addHandlerChangePage(controlPagination);
   recipeView.addHandlerUpdateServings(controlUpdateServings);
+  recipeView.addHandlerSaveRecipe(controlSaveRecipe);
 };

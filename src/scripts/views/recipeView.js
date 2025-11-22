@@ -33,6 +33,19 @@ class recipeView extends View {
   _data;
   _parentElement = document.getElementById('recipe-detail');
 
+  addHandlerSaveRecipe = (handler) => {
+    this._parentElement.addEventListener('click', (e) => {
+      const isbtnSaveRecipe = e.target.closest('#save-recipe-btn');
+      const markup = `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVED RECIPE`;
+
+      if (!isbtnSaveRecipe) return;
+
+      isbtnSaveRecipe.classList.remove('btn-outline');
+      isbtnSaveRecipe.innerHTML = markup;
+      handler(true);
+    });
+  };
+
   addHandlerUpdateServings = (handler) => {
     this._parentElement.addEventListener('click', (e) => {
       const input = document.getElementById('servings');

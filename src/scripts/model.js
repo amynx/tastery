@@ -41,7 +41,7 @@ export const searchService = new SearchService(URL_API);
 const state = {
   recipe: {},
   search: searchService.state,
-  bookmarks: {},
+  bookmarks: [],
 };
 
 /**
@@ -101,4 +101,13 @@ export const updateServings = function (newServings) {
   state.recipe.servings = newServings;
 
   return updatedIngredients;
+};
+
+export const addRecipeBookmarks = function () {
+  const loadedRecipe = state.recipe.id;
+  state.search.recipes.forEach((recipe) => {
+    if (recipe.id === loadedRecipe) state.bookmarks.push(recipe);
+  });
+  console.log(state.bookmarks);
+  return state.bookmarks;
 };

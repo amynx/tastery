@@ -44,12 +44,17 @@ const state = {
   bookmarks: [],
 };
 
+const isMarked = function (id) {
+  return state.bookmarks.some((recipe) => recipe.id === id);
+};
+
 /**
  * Loads a recipe from the API by its ID, normalizes the data, and updates the global state.
  *
  * @async
  * @function loadRecipe
  * @param {string} id - ID of the recipe to load.
+ * @param marked
  * @returns {Promise<Recipe>} The processed recipe stored in the state.
  *
  * @throws {Error} Throws an error if the HTTP request fails or if the API does not respond correctly.
@@ -79,7 +84,9 @@ export const loadRecipe = async function (id) {
       ingredients: data.recipe.ingredients,
       publisher: data.recipe.publisher,
       sourceUrl: data.recipe.source_url,
+      isMarked: isMarked(id),
     };
+    console.log(recipe);
 
     state.recipe = recipe;
     return state.recipe;
@@ -103,10 +110,10 @@ export const updateServings = function (newServings) {
   return updatedIngredients;
 };
 
-export const addRecipeBookmarks = function () {
-  const loadedRecipe = state.recipe.id;
+export const addRecipeBookmarks = function (marked) {
+  const idLoadedRecipe = state.recipe.id;
   state.search.recipes.forEach((recipe) => {
-    if (recipe.id === loadedRecipe) state.bookmarks.push(recipe);
+    if (recipe.id === idLoadedRecipe) state.bookmarks.push({ ...recipe, isMarked: marked });
   });
   console.log(state.bookmarks);
   return state.bookmarks;

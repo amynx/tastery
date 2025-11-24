@@ -46,14 +46,28 @@ class recipeView extends View {
 
   addHandlerSaveRecipe = (handler) => {
     this._parentElement.addEventListener('click', (e) => {
-      const isbtnSaveRecipe = e.target.closest('#save-recipe-btn');
-      const markup = `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVED RECIPE`;
+      const btn = e.target.closest('#save-recipe-btn');
+      if (!btn) return;
 
-      if (!isbtnSaveRecipe) return;
+      const isMarked = btn.dataset.marked === 'true';
 
-      isbtnSaveRecipe.classList.remove('btn-outline');
-      isbtnSaveRecipe.innerHTML = markup;
-      handler(true);
+      const markups = {
+        true: `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVED RECIPE`,
+        false: `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVE RECIPE`,
+      };
+
+      // Toggle estado
+      const newState = !isMarked;
+      btn.dataset.marked = newState;
+
+      // Toggle clase visual
+      btn.classList.toggle('btn-outline', !newState);
+
+      // Actualizar contenido
+      btn.innerHTML = markups[newState];
+
+      // Llamar al controlador
+      handler(newState);
     });
   };
 
@@ -171,6 +185,7 @@ class recipeView extends View {
                 class="btn ${this._data.isMarked ? '' : 'btn-outline'} btn-primary gap-2 uppercase"
                 aria-pressed="false"
                 aria-label="Save recipe"
+                ${this._data.isMarked ? 'data-marked="true"' : 'data-marked="false"'}
               >
                 <i data-lucide="bookmark" class="w-5 h-5"></i>
                 ${this._data.isMarked ? 'SAVED RECIPE' : 'SAVE RECIPE'}

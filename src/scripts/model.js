@@ -86,7 +86,6 @@ export const loadRecipe = async function (id) {
       sourceUrl: data.recipe.source_url,
       isMarked: isMarked(id),
     };
-    console.log(recipe);
 
     state.recipe = recipe;
     return state.recipe;
@@ -115,6 +114,16 @@ export const addRecipeBookmarks = function (marked) {
   state.search.recipes.forEach((recipe) => {
     if (recipe.id === idLoadedRecipe) state.bookmarks.push({ ...recipe, isMarked: marked });
   });
-  console.log(state.bookmarks);
+
+  return state.bookmarks;
+};
+
+export const removeRecipeBookmarks = function () {
+  const idLoadedRecipe = state.recipe.id;
+
+  const index = state.bookmarks.findIndex((recipe) => recipe.id === idLoadedRecipe);
+
+  if (index !== -1) state.bookmarks.splice(index, 1);
+
   return state.bookmarks;
 };

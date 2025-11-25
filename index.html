@@ -113,20 +113,74 @@
             Add Recipe
           </a>
 
-          <!-- Saved Recipes Dropdown -->
+          <!-- ========================================================================================= -->
+          <!-- @section SavedRecipesDropdown -->
+          <!-- @description
+  This component renders the “Saved Recipes” dropdown menu. It displays a trigger button and a
+  dropdown panel containing the list of bookmarked recipes. When no recipes are stored, it shows
+  an informational message indicating the empty state.
+-->
+          <!-- @responsive
+  The dropdown adapts to container width. The panel grows from xs to md and lg widths using Tailwind
+  responsive utilities. Visible on all breakpoints.
+-->
+          <!-- ========================================================================================= -->
+
           <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-ghost rounded-field uppercase">
-              <i data-lucide="bookmark"></i>
+            <!-- ======================== TRIGGER BUTTON ======================== -->
+            <!-- @element SavedRecipesTrigger -->
+            <!-- @description
+    Button that opens or closes the saved recipes dropdown panel. It includes an icon for visual
+    identification and supports keyboard focus via tabindex. Compatible with DaisyUI `btn-ghost`.
+  -->
+            <div
+              tabindex="0"
+              role="button"
+              aria-label="Open saved recipes list"
+              class="btn btn-ghost rounded-field uppercase"
+            >
+              <i data-lucide="bookmark" aria-hidden="true"></i>
               Saved
             </div>
+
+            <!-- ======================== DROPDOWN PANEL ======================== -->
+            <!-- @element SavedRecipesPanel -->
+            <!-- @description
+    Container that holds the saved recipes list. It remains empty when no recipes are saved.
+    Uses DaisyUI dropdown styles and semantic list markup <ul>. Scrollable when content exceeds
+    panel height.
+  -->
             <ul
               id="list-bookmarks"
               tabindex="-1"
+              role="list"
+              aria-live="polite"
               class="dropdown-content bg-base-200 rounded-box z-10 mt-4 w-max max-w-xs md:max-w-sm lg:max-w-md p-2 shadow-sm overflow-visible"
             >
-              <!--li>
-                <a>Recipe 1</a>
-              </li-->
+              <!-- ======================== EMPTY STATE ======================== -->
+              <!-- @element SavedRecipesEmptyState -->
+              <!-- @description
+      Shown only when the user has no saved recipes. Communicates clearly that the list is empty.
+      The block includes an icon, supportive text, and uses an accessible role to announce state
+      changes dynamically.
+    -->
+              <!-- @state empty -->
+              <li
+                class="p-4 flex flex-col items-center justify-center text-center gap-2 opacity-70"
+                role="status"
+              >
+                <i data-lucide="bookmark-x" class="w-6 h-6" aria-hidden="true"></i>
+                <span class="text-sm font-medium">No saved recipes yet</span>
+                <span class="text-xs">Save your favorite recipes to access them here.</span>
+              </li>
+
+              <!--
+    Example for future dynamic items:
+
+    <li>
+      <a class="block px-4 py-2 hover:bg-base-300 rounded-md">Example Recipe</a>
+    </li>
+    -->
             </ul>
           </div>
         </div>

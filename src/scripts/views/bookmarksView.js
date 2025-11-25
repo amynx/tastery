@@ -11,7 +11,7 @@ class BookmarksView extends View {
     const markup = this._data
       .map((recipe) => {
         return `
-             <li class="w-full">
+             <li class="w-full pt-2">
                 <a
                   id="card-item"
                   href="#${recipe.id}"

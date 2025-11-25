@@ -18,12 +18,14 @@ import {
   updateServings,
   addRecipeBookmarks,
   removeRecipeBookmarks,
+  getLocalStorage,
 } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import BookmarksView from './views/bookmarksView.js';
 import { createIcons, icons } from 'lucide';
+import bookmarksView from './views/bookmarksView.js';
 
 /**
  * Controls the process of fetching and rendering a recipe.
@@ -132,6 +134,21 @@ const controlPagination = async function (currentPage) {
  * If there is no ID in the hash, nothing is executed.
  */
 export const init = function () {
+  window.addEventListener(
+    'load',
+    (e) => {
+      e.preventDefault;
+      const data = getLocalStorage();
+      if (!data) return;
+
+      recipeView.render(data.recipe);
+      searchView.render(data.search.recipes);
+      paginationView.render(data.search);
+      bookmarksView.render(data.bookmarks);
+      createIcons({ icons });
+    },
+    { once: true }
+  );
   searchView.addHandlerRender(controlSearchRecipe);
   paginationView.addHandlerChangePage(controlPagination);
   recipeView.addHandlerChangeUrl(controlLoadRecipe);

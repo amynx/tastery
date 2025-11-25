@@ -34,14 +34,11 @@ class recipeView extends View {
   _parentElement = document.getElementById('recipe-detail');
 
   addHandlerChangeUrl = (handler) => {
-    const events = ['load', 'hashchange'];
-    events.forEach((e) =>
-      window.addEventListener(e, () => {
-        const recipeId = window.location.hash;
-        if (!recipeId) return;
-        handler(recipeId.slice(1));
-      })
-    );
+    window.addEventListener('hashchange', () => {
+      const recipeId = window.location.hash;
+      if (!recipeId) return;
+      handler(recipeId.slice(1));
+    });
   };
 
   addHandlerSaveRecipe = (handler) => {

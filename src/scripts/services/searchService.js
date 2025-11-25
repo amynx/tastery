@@ -85,7 +85,7 @@ export default class SearchService {
    *
    * @param pageNumber
    */
-  async goToPage(pageNumber) {
+  async goToPage(pageNumber = this.state.currentPage) {
     this.state.currentPage = pageNumber;
 
     const allRecipes = await this.fetchRecipes(this.state.query);

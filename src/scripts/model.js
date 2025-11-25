@@ -38,7 +38,7 @@ export const searchService = new SearchService(URL_API);
  *   bookmarks: Object
  * }}
  */
-const state = {
+let state = {
   recipe: {},
   search: searchService.state,
   bookmarks: [],
@@ -46,6 +46,10 @@ const state = {
 
 const isMarked = function (id) {
   return state.bookmarks.some((recipe) => recipe.id === id);
+};
+
+const setLocalStorage = (data) => {
+  localStorage.setItem('recipes', JSON.stringify(data));
 };
 
 /**
@@ -114,7 +118,7 @@ export const addRecipeBookmarks = function (marked) {
   state.search.recipes.forEach((recipe) => {
     if (recipe.id === idLoadedRecipe) state.bookmarks.push({ ...recipe, isMarked: marked });
   });
-
+  setLocalStorage(state);
   return state.bookmarks;
 };
 
@@ -124,6 +128,16 @@ export const removeRecipeBookmarks = function () {
   const index = state.bookmarks.findIndex((recipe) => recipe.id === idLoadedRecipe);
 
   if (index !== -1) state.bookmarks.splice(index, 1);
-
+  setLocalStorage(state);
   return state.bookmarks;
+};
+
+export const getLocalStorage = () => {
+  const data = localStorage.getItem('recipes');
+  if (!data) return;
+  state = JSON.parse(data);
+
+  searchService.state = state.search;
+
+  return state;
 };

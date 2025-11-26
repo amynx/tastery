@@ -38,10 +38,18 @@ export const searchService = new SearchService(URL_API);
  *   bookmarks: Object
  * }}
  */
-const state = {
+let state = {
   recipe: {},
   search: searchService.state,
-  bookmarks: {},
+  bookmarks: [],
+};
+
+const isMarked = function (id) {
+  return state.bookmarks.some((recipe) => recipe.id === id);
+};
+
+const setLocalStorage = (data) => {
+  localStorage.setItem('recipes', JSON.stringify(data));
 };
 
 /**
@@ -50,6 +58,7 @@ const state = {
  * @async
  * @function loadRecipe
  * @param {string} id - ID of the recipe to load.
+ * @param marked
  * @returns {Promise<Recipe>} The processed recipe stored in the state.
  *
  * @throws {Error} Throws an error if the HTTP request fails or if the API does not respond correctly.
@@ -79,9 +88,11 @@ export const loadRecipe = async function (id) {
       ingredients: data.recipe.ingredients,
       publisher: data.recipe.publisher,
       sourceUrl: data.recipe.source_url,
+      isMarked: isMarked(id),
     };
 
     state.recipe = recipe;
+    setLocalStorage(state);
     return state.recipe;
   } catch (error) {
     console.error('🚩Error while loading recipe:', error);
@@ -100,5 +111,35 @@ export const updateServings = function (newServings) {
   state.recipe.ingredients = updatedIngredients;
   state.recipe.servings = newServings;
 
+  setLocalStorage(state);
   return updatedIngredients;
+};
+
+export const addRecipeBookmarks = function (marked) {
+  const idLoadedRecipe = state.recipe.id;
+  state.search.recipes.forEach((recipe) => {
+    if (recipe.id === idLoadedRecipe) state.bookmarks.push({ ...recipe, isMarked: marked });
+  });
+  setLocalStorage(state);
+  return state.bookmarks;
+};
+
+export const removeRecipeBookmarks = function () {
+  const idLoadedRecipe = state.recipe.id;
+
+  const index = state.bookmarks.findIndex((recipe) => recipe.id === idLoadedRecipe);
+
+  if (index !== -1) state.bookmarks.splice(index, 1);
+  setLocalStorage(state);
+  return state.bookmarks;
+};
+
+export const getLocalStorage = () => {
+  const data = localStorage.getItem('recipes');
+  if (!data) return;
+  state = JSON.parse(data);
+
+  searchService.state = state.search;
+
+  return state;
 };

@@ -12,11 +12,20 @@
  * - Render SVG icons with `lucide`.
  */
 
-import { searchService, loadRecipe, updateServings } from './model.js';
+import {
+  searchService,
+  loadRecipe,
+  updateServings,
+  addRecipeBookmarks,
+  removeRecipeBookmarks,
+  getLocalStorage,
+} from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import BookmarksView from './views/bookmarksView.js';
 import { createIcons, icons } from 'lucide';
+import bookmarksView from './views/bookmarksView.js';
 
 /**
  * Controls the process of fetching and rendering a recipe.
@@ -72,6 +81,13 @@ const controlUpdateServings = (newServings) => {
   createIcons({ icons });
 };
 
+const controlSaveRecipe = (marked) => {
+  const bookmarks = marked ? addRecipeBookmarks(marked) : removeRecipeBookmarks(marked);
+  BookmarksView.render(bookmarks);
+  // Render SVG icons
+  createIcons({ icons });
+};
+
 const controlSearchRecipe = async function (query) {
   try {
     // Mostrar alerta
@@ -118,16 +134,24 @@ const controlPagination = async function (currentPage) {
  * If there is no ID in the hash, nothing is executed.
  */
 export const init = function () {
-  const events = ['load', 'hashchange'];
-  events.forEach((e) =>
-    window.addEventListener(e, () => {
-      const recipeId = window.location.hash;
-      if (!recipeId) return;
-      controlLoadRecipe(recipeId.slice(1));
-    })
-  );
+  window.addEventListener(
+    'load',
+    (e) => {
+      e.preventDefault;
+      const data = getLocalStorage();
+      if (!data) return;
 
+      recipeView.render(data.recipe);
+      searchView.render(data.search.recipes);
+      paginationView.render(data.search);
+      bookmarksView.render(data.bookmarks);
+      createIcons({ icons });
+    },
+    { once: true }
+  );
   searchView.addHandlerRender(controlSearchRecipe);
   paginationView.addHandlerChangePage(controlPagination);
+  recipeView.addHandlerChangeUrl(controlLoadRecipe);
   recipeView.addHandlerUpdateServings(controlUpdateServings);
+  recipeView.addHandlerSaveRecipe(controlSaveRecipe);
 };

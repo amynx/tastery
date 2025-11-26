@@ -9,8 +9,6 @@ class paginationView extends View {
 
   addHandlerChangePage = (handler) => {
     this._parentElement.addEventListener('click', (e) => {
-      console.log(this._data);
-
       const element = e.target;
       if (!element.classList.contains('join-item')) return;
 

@@ -33,6 +33,41 @@ class recipeView extends View {
   _data;
   _parentElement = document.getElementById('recipe-detail');
 
+  addHandlerChangeUrl = (handler) => {
+    window.addEventListener('hashchange', () => {
+      const recipeId = window.location.hash;
+      if (!recipeId) return;
+      handler(recipeId.slice(1));
+    });
+  };
+
+  addHandlerSaveRecipe = (handler) => {
+    this._parentElement.addEventListener('click', (e) => {
+      const btn = e.target.closest('#save-recipe-btn');
+      if (!btn) return;
+
+      const isMarked = btn.dataset.marked === 'true';
+
+      const markups = {
+        true: `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVED RECIPE`,
+        false: `<i data-lucide="bookmark" class="w-5 h-5"></i> SAVE RECIPE`,
+      };
+
+      // Toggle estado
+      const newState = !isMarked;
+      btn.dataset.marked = newState;
+
+      // Toggle clase visual
+      btn.classList.toggle('btn-outline', !newState);
+
+      // Actualizar contenido
+      btn.innerHTML = markups[newState];
+
+      // Llamar al controlador
+      handler(newState);
+    });
+  };
+
   addHandlerUpdateServings = (handler) => {
     this._parentElement.addEventListener('click', (e) => {
       const input = document.getElementById('servings');
@@ -144,12 +179,13 @@ class recipeView extends View {
             <div>
               <button
                 id="save-recipe-btn"
-                class="btn btn-outline btn-primary gap-2 uppercase"
+                class="btn ${this._data.isMarked ? '' : 'btn-outline'} btn-primary gap-2 uppercase"
                 aria-pressed="false"
                 aria-label="Save recipe"
+                ${this._data.isMarked ? 'data-marked="true"' : 'data-marked="false"'}
               >
                 <i data-lucide="bookmark" class="w-5 h-5"></i>
-                SAVE RECIPE
+                ${this._data.isMarked ? 'SAVED RECIPE' : 'SAVE RECIPE'}
               </button>
             </div>
           </div>

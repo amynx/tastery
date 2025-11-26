@@ -92,6 +92,7 @@ export const loadRecipe = async function (id) {
     };
 
     state.recipe = recipe;
+    setLocalStorage(state);
     return state.recipe;
   } catch (error) {
     console.error('🚩Error while loading recipe:', error);
@@ -110,6 +111,7 @@ export const updateServings = function (newServings) {
   state.recipe.ingredients = updatedIngredients;
   state.recipe.servings = newServings;
 
+  setLocalStorage(state);
   return updatedIngredients;
 };
 

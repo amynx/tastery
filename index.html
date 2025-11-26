@@ -498,12 +498,99 @@
           <span class="sr-only">Loading recipe...</span>
         </div>
 
+        <div
+          id="recipe-empty"
+          class="flex flex-col justify-center items-center text-center gap-8 py-6 px-6"
+          role="status"
+          aria-live="polite"
+        >
+          <!-- Illustration -->
+          <figure class="w-56 h-56 opacity-95 drop-shadow-sm" aria-hidden="true">
+            <img
+              src="src/assets/img/undraw_cooking_j2pu.svg"
+              alt=""
+              class="w-full h-full object-contain select-none pointer-events-none"
+              draggable="false"
+            />
+          </figure>
+
+          <!-- Decorative badge -->
+          <div
+            class="flex items-center gap-2 text-primary/80 text-sm font-medium uppercase tracking-wide"
+          >
+            <i data-lucide="chef-hat" class="w-4 h-4"></i>
+            Recipe Viewer
+          </div>
+
+          <!-- Title -->
+          <h2 class="text-3xl font-bold text-base-content/90 leading-snug">
+            There is no recipe to show yet.
+          </h2>
+
+          <!-- Description -->
+          <p class="max-w-lg text-base text-base-content/70 leading-relaxed">
+            Use the search bar to find new recipes by name or ingredients. When you select one of
+            the results, you will see its details here: ingredients, preparation steps, and options
+            to adjust portions.
+          </p>
+
+          <!-- Divider -->
+          <div class="w-20 h-1 rounded-full bg-primary/30 my-2"></div>
+
+          <!-- Helpful section -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
+            <!-- Item 1 -->
+            <div
+              class="flex items-start gap-3 p-4 rounded-xl bg-base-200/50 backdrop-blur-sm border border-base-300"
+            >
+              <i data-lucide="search" class="w-5 h-5 text-primary"></i>
+              <p class="text-sm text-base-content/70 leading-snug">
+                <span class="font-semibold text-base-content/80">Explore ideas:</span><br />
+                Search for dishes or ingredients you want to cook.
+              </p>
+            </div>
+
+            <!-- Item 2 -->
+            <div
+              class="flex items-start gap-3 p-4 rounded-xl bg-base-200/50 backdrop-blur-sm border border-base-300"
+            >
+              <i data-lucide="list-checks" class="w-5 h-5 text-primary"></i>
+              <p class="text-sm text-base-content/70 leading-snug">
+                <span class="font-semibold text-base-content/80">Step-by-step guidance:</span><br />
+                View clear and organized preparation instructions.
+              </p>
+            </div>
+
+            <!-- Item 3 -->
+            <div
+              class="flex items-start gap-3 p-4 rounded-xl bg-base-200/50 backdrop-blur-sm border border-base-300"
+            >
+              <i data-lucide="scale" class="w-5 h-5 text-primary"></i>
+              <p class="text-sm text-base-content/70 leading-snug">
+                <span class="font-semibold text-base-content/80">Adjust servings:</span><br />
+                Modify the quantity to cook exactly what you need.
+              </p>
+            </div>
+
+            <!-- Item 4 -->
+            <div
+              class="flex items-start gap-3 p-4 rounded-xl bg-base-200/50 backdrop-blur-sm border border-base-300"
+            >
+              <i data-lucide="utensils" class="w-5 h-5 text-primary"></i>
+              <p class="text-sm text-base-content/70 leading-snug">
+                <span class="font-semibold text-base-content/80">Clear ingredients:</span><br />
+                Check precise and easy-to-follow measurements.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- ======================== RECIPE CONTAINER ======================== -->
         <!-- @element RecipeContent -->
         <!-- @description
       Main container for displaying recipe content when available.
     -->
-        <article id="recipe-content" class="flex flex-col gap-8" aria-live="polite">
+        <article id="recipe-content" class="hidden flex flex-col gap-8" aria-live="polite">
           <!-- ======================== IMAGE & TITLE ======================== -->
           <!-- @element RecipeHeader -->
           <!-- @description

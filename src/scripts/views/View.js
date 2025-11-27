@@ -121,9 +121,9 @@ class View {
    * @returns {void}
    */
   renderSpinner = () => {
-    this._spinner.classList.remove('hidden');
-    this._parentElment.innerHTML = '';
-    this._parentElment.appendChild(this._spinner);
+    this._spinnerParentElement.classList.remove('hidden');
+    this._parentElement.innerHTML = '';
+    this._parentElement.appendChild(this._spinnerParentElement);
   };
 
   /**

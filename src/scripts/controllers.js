@@ -112,6 +112,7 @@ const controlSearchRecipe = async function (query) {
 };
 
 const controlPagination = async function (currentPage) {
+  searchView.renderSpinner();
   // Solitud en base a la Query actual
   const data = await searchService.goToPage(currentPage);
 

@@ -19,6 +19,7 @@ import {
   addRecipeBookmarks,
   removeRecipeBookmarks,
   getLocalStorage,
+  uploadRecipe,
 } from './model.js';
 import paginationView from './views/paginationView.js';
 import recipeView from './views/recipeView.js';
@@ -26,6 +27,7 @@ import searchView from './views/searchView.js';
 import BookmarksView from './views/bookmarksView.js';
 import { createIcons, icons } from 'lucide';
 import bookmarksView from './views/bookmarksView.js';
+import formView from './views/formView.js';
 
 /**
  * Controls the process of fetching and rendering a recipe.
@@ -120,6 +122,10 @@ const controlPagination = async function (currentPage) {
   paginationView.render(data);
 };
 
+const controlUploadRecipe = (recipe) => {
+  uploadRecipe(recipe);
+};
+
 /**
  * Initializes the module by registering the necessary listeners to handle
  * the initial load and changes in the URL (`hashchange` event).
@@ -155,4 +161,6 @@ export const init = function () {
   recipeView.addHandlerChangeUrl(controlLoadRecipe);
   recipeView.addHandlerUpdateServings(controlUpdateServings);
   recipeView.addHandlerSaveRecipe(controlSaveRecipe);
+  formView.addHandlerAddRecipe();
+  formView.addHandlerSubmit(controlUploadRecipe);
 };

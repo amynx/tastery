@@ -108,7 +108,7 @@
       <div class="flex grow justify-end px-2">
         <div class="hidden md:flex items-stretch">
           <!-- Add Recipe Button -->
-          <a class="btn btn-ghost rounded-field uppercase">
+          <a id="btn-add-recipe" class="btn btn-ghost rounded-field uppercase">
             <i data-lucide="plus"></i>
             Add Recipe
           </a>
@@ -793,6 +793,7 @@
             Add New Recipe
           </h2>
           <button
+            id="btn-close-form"
             class="btn btn-sm btn-circle btn-ghost"
             aria-label="Close modal"
             title="Close form"
@@ -806,7 +807,7 @@
         <!-- @description
       Contains two logical sections for recipe data and ingredients.
     -->
-        <form class="space-y-6" role="form" aria-live="polite">
+        <form id="form" class="space-y-6" role="form" aria-live="polite">
           <!-- ======================== SECTION 1: RECIPE DATA ======================== -->
           <!-- @element RecipeDataSection -->
           <!-- @description
@@ -829,6 +830,7 @@
                   id="recipeTitle"
                   name="title"
                   placeholder="e.g., Chocolate Cake"
+                  value="Default Recipe Title"
                   class="input input-bordered w-full"
                   required
                 />
@@ -844,6 +846,7 @@
                   id="recipeUrl"
                   name="sourceUrl"
                   placeholder="e.g., https://example.com"
+                  value="https://example.com/recipe"
                   class="input input-bordered w-full"
                 />
               </div>
@@ -858,6 +861,7 @@
                   id="imageUrl"
                   name="image"
                   placeholder="e.g., https://example.com/image.jpg"
+                  value="https://example.com/default-image.jpg"
                   class="input input-bordered w-full"
                 />
               </div>
@@ -872,6 +876,7 @@
                   id="publisher"
                   name="publisher"
                   placeholder="e.g., John Doe"
+                  value="Default Publisher"
                   class="input input-bordered w-full"
                 />
               </div>
@@ -887,6 +892,7 @@
                   name="prepTime"
                   min="1"
                   placeholder="e.g., 30"
+                  value="15"
                   class="input input-bordered w-full"
                 />
               </div>
@@ -902,6 +908,7 @@
                   name="servings"
                   min="1"
                   placeholder="e.g., 4"
+                  value="2"
                   class="input input-bordered w-full"
                 />
               </div>
@@ -919,78 +926,79 @@
               INGREDIENTS
             </h3>
 
-            <!-- Ingredients Grid -->
             <div id="ingredientsWrapper" class="space-y-3">
-              <!-- @state default: 6 input fields -->
-              <!-- Each ingredient input represents one ingredient line in the recipe -->
               <template id="ingredientTemplate">
                 <div class="form-control">
                   <input
                     type="text"
-                    placeholder="e.g., 100g sugar"
+                    name="ingredients[]"
+                    placeholder="e.g., 1 kg Flour"
+                    value="1 kg Flour"
                     class="input input-bordered w-full ingredient-input"
                   />
                 </div>
               </template>
 
+              <!-- 6 campos iniciales -->
               <div class="form-control">
                 <input
                   type="text"
-                  placeholder="Quantity, unit and description"
+                  name="ingredients[]"
+                  placeholder="e.g., 1 kg Flour"
+                  value="1 kg Flour"
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
-              <div class="form-control">
-                <input
-                  type="text"
-                  placeholder="Quantity, unit and description"
-                  class="input input-bordered w-full ingredient-input"
-                />
-              </div>
-              <div class="form-control">
-                <input
-                  type="text"
-                  placeholder="Quantity, unit and description"
-                  class="input input-bordered w-full ingredient-input"
-                />
-              </div>
-              <div class="form-control">
-                <input
-                  type="text"
-                  placeholder="Quantity, unit and description"
-                  class="input input-bordered w-full ingredient-input"
-                />
-              </div>
-              <div class="form-control">
-                <input
-                  type="text"
-                  placeholder="Quantity, unit and description"
-                  class="input input-bordered w-full ingredient-input"
-                />
-              </div>
-              <div class="form-control">
-                <input
-                  type="text"
-                  placeholder="Quantity, unit and description"
-                  class="input input-bordered w-full ingredient-input"
-                />
-              </div>
-            </div>
 
-            <!-- Add Ingredient Button -->
-            <!-- @element AddIngredientButton -->
-            <!-- @description
-          Allows users to add new ingredient input fields dynamically.
-        -->
-            <div class="mt-4 text-right">
-              <button
-                type="button"
-                id="addIngredientBtn"
-                class="btn btn-outline btn-sm"
-                aria-label="Add another ingredient"
-              >
-                + Add Ingredient
-              </button>
+              <div class="form-control">
+                <input
+                  type="text"
+                  name="ingredients[]"
+                  placeholder="e.g., 1 l Milk"
+                  value="1 l Milk"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+
+              <div class="form-control">
+                <input
+                  type="text"
+                  name="ingredients[]"
+                  placeholder="e.g., 2 tbsp Sugar"
+                  value="2 tbsp Sugar"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+
+              <div class="form-control">
+                <input
+                  type="text"
+                  name="ingredients[]"
+                  placeholder="e.g., 3 g Salt"
+                  value="3 g Salt"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+
+              <div class="form-control">
+                <input
+                  type="text"
+                  name="ingredients[]"
+                  placeholder="e.g., 0.5 cup Butter"
+                  value="0.5 cup Butter"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
+
+              <div class="form-control">
+                <input
+                  type="text"
+                  name="ingredients[]"
+                  placeholder="e.g., 1 pc Egg"
+                  value="1 pc Egg"
+                  class="input input-bordered w-full ingredient-input"
+                />
+              </div>
             </div>
           </section>
 
@@ -1001,22 +1009,8 @@
         and follows DaisyUI button styling conventions.
       -->
           <div class="text-center pt-4">
-            <button type="submit" class="btn btn-primary gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 8l-3-3m3 3l3-3"
-                />
-              </svg>
+            <button id="btn-submit-form" type="submit" class="btn btn-primary gap-2">
+              <i data-lucide="upload"></i>
               Upload
             </button>
           </div>

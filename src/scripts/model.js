@@ -4,7 +4,7 @@
  * Module responsible for managing and storing the global state of the application.
  * Includes functions for loading recipes from the external API and normalizing data.
  */
-import { URL_API } from './config.js';
+import { URL_API, KEY_API } from './config.js';
 import SearchService from './services/searchService.js';
 
 // Instancia del servicio
@@ -51,6 +51,58 @@ const isMarked = function (id) {
 const setLocalStorage = (data) => {
   localStorage.setItem('recipes', JSON.stringify(data));
 };
+
+const formatData = (data) => {
+  return {
+    image_url: data.image,
+    title: data.title,
+    cooking_time: Number(data.prepTime),
+    servings: Number(data.servings),
+    ingredients: data['ingredients[]'].map((ing) => {
+      const arr = ing.trim().split(' ');
+
+      const quantity = parseFloat(arr[0]) || null;
+      const unit = arr[1] || '';
+      const description = arr.slice(2).join(' ') || '';
+
+      return {
+        quantity,
+        unit,
+        description,
+      };
+    }),
+    publisher: data.publisher,
+    source_url: data.sourceUrl,
+  };
+};
+
+/**
+ *
+ * @param recipeData
+ */
+export async function uploadRecipe(recipeData) {
+  try {
+    const recipe = formatData(recipeData);
+    console.log(recipe);
+
+    const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes?key=${KEY_API}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(recipe),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
+
+    console.log('Receta creada:', data);
+  } catch (err) {
+    console.error('Error al crear receta:', err);
+    throw err;
+  }
+}
 
 /**
  * Loads a recipe from the API by its ID, normalizes the data, and updates the global state.

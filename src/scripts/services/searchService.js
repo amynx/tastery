@@ -1,4 +1,5 @@
-import { RESULTS_PER_PAGE } from '../config.js';
+import { RESULTS_PER_PAGE, USER_ID_API, KEY_API  } from '../config.js';
+
 /**
  *
  */
@@ -11,12 +12,14 @@ export default class SearchService {
     this.apiBaseUrl = apiBaseUrl;
 
     // Estado interno del servicio
-    this.state = {
-      query: '',
-      currentPage: 1,
-      totalPages: 1,
-      recipes: [],
-    };
+  this.state = {
+  query: '',
+  currentPage: 1,
+  totalPages: 1,
+  recipes: [],
+  nextUrl: null,      
+};
+
   }
 
   // --- Helpers --- //
@@ -32,16 +35,28 @@ export default class SearchService {
     return items.slice(start, start + perPage);
   }
 
+ extractRecipeId (uri) {
+  return uri.split("#recipe_")[1];
+}
+
+ randomInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
   /**
    *
    * @param recipes
    */
   format(recipes) {
-    return recipes.map(({ id, image_url, title, publisher }) => ({
-      id,
-      imageUrl: image_url,
-      title,
-      publisher,
+    return recipes.map((recipe) => ({
+      id: this.extractRecipeId(recipe.uri),
+      imageUrl: recipe.image,
+      title: recipe.label,
+      cookingTime: recipe.totalTime || this.randomInRange(30, 60),
+      servings: recipe.yield,
+      ingredients: recipe.ingredients,
+      publisher: recipe.source,
+      sourceUrl: recipe.url,
     }));
   }
 
@@ -49,50 +64,94 @@ export default class SearchService {
    *
    * @param query
    */
-  async fetchRecipes(query) {
-    const res = await fetch(`${this.apiBaseUrl}/recipes/?search=${query}`);
+async fetchRecipes(url) {
+  const res = await fetch(url, {
+    headers: {
+      'Edamam-Account-User': USER_ID_API,
+    },
+  });
 
-    if (!res.ok) throw new Error('Error Connection');
+  if (!res.ok) throw new Error('Error Connection');
 
-    const { data } = await res.json();
+  const data = await res.json();
 
-    if (!data.recipes.length) {
-      throw new Error('info'); // mensaje de "no results"
-    }
-
-    return data.recipes;
+  if (!data.hits || data.hits.length === 0) {
+    throw new Error('info'); // No results
   }
+  console.log("links:", data._links);
+
+  return data;
+}
+
+
 
   /**
    *
    * @param query
    */
-  async search(query) {
-    this.state.query = query;
-    this.state.currentPage = 1;
+async search(query) {
+  this.state.query = query;
+  this.state.currentPage = 1;
 
-    const allRecipes = await this.fetchRecipes(query);
+  const initialUrl = `${this.apiBaseUrl}?type=public&q=${query}&app_id=${USER_ID_API}&app_key=${KEY_API}`;
 
-    this.state.totalPages = Math.ceil(allRecipes.length / RESULTS_PER_PAGE);
+  const data = await this.fetchRecipes(initialUrl);
 
-    const pageRecipes = this.paginate(allRecipes, 1);
-    this.state.recipes = this.format(pageRecipes);
+  const allRecipes = data.hits.map(hit => hit.recipe);
 
-    return this.state;
-  }
+  // Guardar next page (si existe)
+  this.state.nextUrl = data._links?.next?.href || null;
+
+  // Reformatear
+  const formatted = this.format(allRecipes);
+
+  this.state.recipes = formatted;
+
+  // Calcular páginas internas
+  this.state.totalPages = Math.ceil(formatted.length / RESULTS_PER_PAGE);
+
+  const firstPage = this.paginate(formatted, 1);
+
+  return { state: this.state, recipes: firstPage };
+}
+
+
+async fetchNextPage() {
+  if (!this.state.nextUrl) return null;
+
+  const data = await this.fetchRecipes(this.state.nextUrl);
+
+  const newRecipes = data.hits.map(hit => hit.recipe);
+
+  // Guardar next real
+  this.state.nextUrl = data._links?.next?.href || null;
+
+  // Formatear
+  const formatted = this.format(newRecipes);
+
+  // Agregar recetas al estado
+  this.state.recipes = [...this.state.recipes, ...formatted];
+
+  // ⚠️ Recalcular totalPages bien
+  this.state.totalPages = Math.ceil(
+    this.state.recipes.length / RESULTS_PER_PAGE
+  );
+
+  return formatted;
+}
+
+
 
   /**
    *
    * @param pageNumber
    */
-  async goToPage(pageNumber = this.state.currentPage) {
-    this.state.currentPage = pageNumber;
+goToPage(pageNumber = this.state.currentPage) {
+  this.state.currentPage = pageNumber;
 
-    const allRecipes = await this.fetchRecipes(this.state.query);
+  const pageRecipes = this.paginate(this.state.recipes, pageNumber);
 
-    const pageRecipes = this.paginate(allRecipes, pageNumber);
-    this.state.recipes = this.format(pageRecipes);
+  return { state: this.state, recipes: pageRecipes };
+}
 
-    return this.state;
-  }
 }

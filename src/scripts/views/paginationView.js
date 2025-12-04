@@ -23,6 +23,8 @@ class paginationView extends View {
   };
 
   _generateMarkup = () => {
+    console.log(this._data);
+    
     if (this._data.totalPages === 1) {
       return `
          <div id="pagination-container" class="join">

@@ -24,14 +24,18 @@ class formView extends View {
     const events = [this._overlayElement, this._btnCloseForm];
     events.forEach((e) => {
       e.addEventListener('click', () => {
-        this._parentElement.classList.add('hidden');
+        this.toggleWindow();
       });
     });
   }
 
+  toggleWindow() {
+    this._parentElement.classList.toggle('hidden');
+  }
+
   addHandlerAddRecipe = () => {
     this._btnAddRecipe.addEventListener('click', () => {
-      this._parentElement.classList.remove('hidden');
+      this.toggleWindow();
     });
   };
 
@@ -51,7 +55,8 @@ class formView extends View {
           data[key] = value;
         }
       });
-
+      console.log(data);
+      
       return handler(data);
     });
   };

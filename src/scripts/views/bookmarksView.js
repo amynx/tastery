@@ -20,6 +20,8 @@ class BookmarksView extends View {
   `;
 
   _generateMarkup = () => {
+    console.log(this._data);
+    
     if (!this._data.length) return this._bookmarksEmptyStateElement;
     const markup = this._data
       .map((recipe) => {

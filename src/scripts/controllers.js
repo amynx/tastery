@@ -138,8 +138,39 @@ const controlPagination = async function (currentPage) {
 
 
 
-const controlUploadRecipe = (recipe) => {
-  uploadRecipe(recipe);
+const controlUploadRecipe = async (recipe) => {
+  try {
+   
+
+    // 2. Upload new recipe data
+    const newRecipe = await uploadRecipe(recipe);
+
+    // 3. Render recipe
+    recipeView.render(newRecipe);
+
+
+
+    // 5. Render bookmark view
+    const state = getLocalStorage();
+    if (state && state.bookmarks) {
+      bookmarksView.render(state.bookmarks);
+    }
+
+    // 6. Change ID in URL
+    window.history.pushState(null, '', `#${newRecipe.id}`);
+    formView.toggleWindow()
+
+    // 4. Success message
+    formView.renderAlert('success');
+ 
+    
+    // 8. Render SVG icons
+    createIcons({ icons });
+
+  } catch (err) {
+    console.error('💥', err);
+    formView.renderAlert(err.message);
+  }
 };
 
 /**

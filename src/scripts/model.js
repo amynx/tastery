@@ -125,31 +125,19 @@ export async function uploadRecipe(recipeData) {
  *
  * Normalization ensures consistency with the rest of the project.
  */
-export const loadRecipe = async function (id) {
-  try {
-    const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes/${id}`);
-    if (!res.ok) throw new Error('Error Connection');
-    const { data } = await res.json();
+export const loadRecipe = function (id) {
+  const recipe = state.search.recipes.find(r => r.id === id) || state.bookmarks.find(r => r.id === id);
 
-    const recipe = {
-      id: data.recipe.id,
-      imageUrl: data.recipe.image_url,
-      title: data.recipe.title,
-      cookingTime: data.recipe.cooking_time,
-      servings: data.recipe.servings,
-      ingredients: data.recipe.ingredients,
-      publisher: data.recipe.publisher,
-      sourceUrl: data.recipe.source_url,
-      isMarked: isMarked(id),
-    };
+  if (!recipe) throw new Error("Recipe not found");
 
-    state.recipe = recipe;
-    setLocalStorage(state);
-    return state.recipe;
-  } catch (error) {
-    console.error('🚩Error while loading recipe:', error);
-    throw error;
-  }
+  state.recipe = {
+    ...recipe,
+    isMarked: isMarked(id),
+  };
+
+  setLocalStorage(state);
+
+  return state.recipe;
 };
 
 export const updateServings = function (newServings) {
@@ -168,10 +156,10 @@ export const updateServings = function (newServings) {
 };
 
 export const addRecipeBookmarks = function (marked) {
-  const idLoadedRecipe = state.recipe.id;
-  state.search.recipes.forEach((recipe) => {
-    if (recipe.id === idLoadedRecipe) state.bookmarks.push({ ...recipe, isMarked: marked });
-  });
+  
+  
+    state.bookmarks.push({ ...state.recipe, isMarked: marked });
+  
   setLocalStorage(state);
   return state.bookmarks;
 };
@@ -195,3 +183,11 @@ export const getLocalStorage = () => {
 
   return state;
 };
+
+
+/*
+1. Cuando # de pagina sea n + 1 = totalPages 
+2. 
+
+
+*/

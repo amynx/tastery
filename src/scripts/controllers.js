@@ -54,7 +54,7 @@ const controlLoadRecipe = async function (id) {
     // recipeView.renderSpinner();
 
     // Load data from the model
-    const data = await loadRecipe(id);
+    const data = loadRecipe(id);
 
     // Render status alerts
     await recipeView.hideAlertLoadingState();
@@ -106,7 +106,7 @@ const controlSearchRecipe = async function (query) {
     // 3. Generando marcado
     // 4. Renderizando
     searchView.render(data.recipes);
-    paginationView.render(data);
+    paginationView.render(data.state);
   } catch (error) {
     await searchView.hideAlertLoadingState();
     await searchView.renderAlert(error.message);
@@ -115,12 +115,28 @@ const controlSearchRecipe = async function (query) {
 
 const controlPagination = async function (currentPage) {
   searchView.renderSpinner();
-  // Solitud en base a la Query actual
-  const data = await searchService.goToPage(currentPage);
+
+  // Si el usuario quiere avanzar a una página que aún NO existe localmente
+  if (currentPage == searchService.state.totalPages) {
+
+    // Si no hay next URL, ya no hay más recetas
+    if (!searchService.state.nextUrl) {
+      searchView.renderMessage("No hay más recetas disponibles.");
+      return;
+    }
+
+    // Esperamos a que el servicio cargue la nueva página REAL de Edamam
+    await searchService.fetchNextPage();
+  }
+
+  // Ahora sí — ya existen las recetas necesarias localmente
+  const data = searchService.goToPage(currentPage);
 
   searchView.render(data.recipes);
-  paginationView.render(data);
+  paginationView.render(data.state);
 };
+
+
 
 const controlUploadRecipe = (recipe) => {
   uploadRecipe(recipe);

@@ -95,11 +95,12 @@ class recipeView extends View {
   // Generates markup for a single ingredient
   _generateIngredientMarkup = (ing) => {
     const quantity = ing.quantity ? new Fraction(ing.quantity).toFraction(true) : '';
+    const measure = ing.measure ? ing.measure : '';
 
     return `
     <li class="flex items-center gap-3">
       <i data-lucide="check" class="w-5 h-5 text-success"></i>
-      <span class="capitalize">${quantity} ${ing.unit} ${ing.description}</span>
+      <span class="capitalize">${quantity} ${measure} ${ing.food}</span>
     </li>
   `;
   };
@@ -209,9 +210,12 @@ class recipeView extends View {
                   const quantity = ing.quantity
                     ? new Fraction(ing.quantity).toFraction(true) // convierte solo la cantidad
                     : '';
+
+                    const measure = ing.measure
+                    ? ing.measure: '';
                   return `<li class="flex items-center gap-3">
                     <i data-lucide="check" class="w-5 h-5 text-success"></i>
-                    <span class="capitalize">${quantity ? quantity : ''} ${ing.unit} ${ing.description}Flour</span>
+                    <span class="capitalize">${quantity ? quantity : ''} ${measure} ${ing.food}</span>
                   </li>`;
                 })
                 .join(' ')}

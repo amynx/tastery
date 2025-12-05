@@ -42,6 +42,8 @@ let state = {
   recipe: {},
   search: searchService.state,
   bookmarks: [],
+  userRecipes: [],
+  nextUrl: null,
 };
 
 const isMarked = function (id) {
@@ -54,25 +56,25 @@ const setLocalStorage = (data) => {
 
 const formatData = (data) => {
   return {
-    image_url: data.image,
+    imageUrl: data.image,
     title: data.title,
-    cooking_time: Number(data.prepTime),
+    cookingTime: Number(data.prepTime),
     servings: Number(data.servings),
     ingredients: data['ingredients[]'].map((ing) => {
       const arr = ing.trim().split(' ');
 
       const quantity = parseFloat(arr[0]) || null;
-      const unit = arr[1] || '';
-      const description = arr.slice(2).join(' ') || '';
+      const measure = arr[1] || '';
+      const food = arr.slice(2).join(' ') || '';
 
       return {
         quantity,
-        unit,
-        description,
+        measure,
+        food,
       };
     }),
     publisher: data.publisher,
-    source_url: data.sourceUrl,
+    sourceUrl: data.sourceUrl,
   };
 };
 
@@ -80,24 +82,28 @@ const formatData = (data) => {
  *
  * @param recipeData
  */
+/**
+ *
+ * @param recipeData
+ */
 export async function uploadRecipe(recipeData) {
   try {
-    const recipe = formatData(recipeData);
-    console.log(recipe);
-
-    const res = await fetch(`https://forkify-api.jonas.io/api/v2/recipes?key=${KEY_API}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(recipe),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-
-    console.log('Receta creada:', data);
+    const recipe = {
+      id: crypto.randomUUID(),
+      ...formatData(recipeData),
+      isUserRecipe: true,
+      isMarked: true,
+    };
+    
+    state.userRecipes.push(recipe);
+    // Automatically bookmark user created recipes
+    state.bookmarks.push(recipe);
+    
+    // Update current recipe in state
+    state.recipe = recipe;
+    
+    setLocalStorage(state);
+    return recipe;
   } catch (err) {
     console.error('Error al crear receta:', err);
     throw err;
@@ -126,7 +132,7 @@ export async function uploadRecipe(recipeData) {
  * Normalization ensures consistency with the rest of the project.
  */
 export const loadRecipe = function (id) {
-  const recipe = state.search.recipes.find(r => r.id === id) || state.bookmarks.find(r => r.id === id);
+  const recipe = state.search.recipes.find(r => r.id === id) || state.bookmarks.find(r => r.id === id) || state.userRecipes.find(r => r.id === id);
 
   if (!recipe) throw new Error("Recipe not found");
 
@@ -180,6 +186,8 @@ export const getLocalStorage = () => {
   state = JSON.parse(data);
 
   searchService.state = state.search;
+  // Ensure userRecipes exists if loading from old local storage
+  if (!state.userRecipes) state.userRecipes = [];
 
   return state;
 };

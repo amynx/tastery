@@ -7,6 +7,15 @@ class searchView extends View {
   _parentElement = document.getElementById('results-grid');
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
+  
+  // Mobile elements
+  _mobileForm = document.getElementById('mobile-search-form');
+  _mobileInput = this._mobileForm?.querySelector('input');
+  _btnOpenSearch = document.getElementById('btn-open-search');
+  _btnCloseSearch = document.getElementById('btn-close-search');
+  _searchResultsSection = document.getElementById('search-results-grid');
+  _overlayElement = document.getElementById('mobile-search-overlay');
+
   _typeAlert = {
     success: {
       title: 'Recipes found!',
@@ -59,13 +68,67 @@ class searchView extends View {
 
       // Inserto indicator en la card cliqueada
       cardElement.insertAdjacentHTML('afterbegin', this._markupIndicator);
+      
+      // On mobile, close the modal when a result is clicked
+      if (window.innerWidth < 1024) {
+        this._closeMobileSearch();
+      }
     });
+
+    // Mobile Search Modal Events
+    if (this._btnOpenSearch) {
+      this._btnOpenSearch.addEventListener('click', this._openMobileSearch.bind(this));
+    }
+    if (this._btnCloseSearch) {
+      this._btnCloseSearch.addEventListener('click', this._closeMobileSearch.bind(this));
+    }
+    if (this._overlayElement) {
+      this._overlayElement.addEventListener('click', this._closeMobileSearch.bind(this));
+    }
   }
+
+  _openMobileSearch() {
+    // Show overlay
+    this._overlayElement.classList.remove('hidden');
+    // Trigger reflow
+    void this._overlayElement.offsetWidth;
+    this._overlayElement.classList.remove('opacity-0');
+    
+    // Prepare modal for animation (start off-screen left)
+    this._searchResultsSection.classList.remove('hidden');
+    this._searchResultsSection.classList.add('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex', '-translate-x-full');
+    
+    // Trigger reflow
+    void this._searchResultsSection.offsetWidth;
+    
+    // Animate in (slide to center)
+    this._searchResultsSection.classList.remove('-translate-x-full');
+    
+    setTimeout(() => this._mobileInput?.focus(), 100);
+  }
+
+  _closeMobileSearch() {
+    // Hide overlay
+    this._overlayElement.classList.add('opacity-0');
+    
+    // Animate out (slide to left)
+    this._searchResultsSection.classList.add('-translate-x-full');
+
+    // Wait for transition to finish before hiding elements
+    setTimeout(() => {
+      this._overlayElement.classList.add('hidden');
+      
+      this._searchResultsSection.classList.add('hidden');
+      this._searchResultsSection.classList.remove('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex', '-translate-x-full');
+    }, 300);
+  }
+
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
   // ---------------------------------------------------------------------------
 
   addHandlerRender = (handler) => {
+    // Desktop Form
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = this._input.value;
@@ -76,6 +139,21 @@ class searchView extends View {
       this._input.value = '';
       handler(query);
     });
+
+    // Mobile Form
+    if (this._mobileForm) {
+      this._mobileForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = this._mobileInput.value;
+        if (!query) {
+          this._mobileInput.value = '';
+          return;
+        }
+        this._mobileInput.value = '';
+        // Also clear desktop input to stay in sync if needed, or just run handler
+        handler(query);
+      });
+    }
   };
 
   _generateMarkup = () => {

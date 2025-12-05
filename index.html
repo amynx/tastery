@@ -58,7 +58,7 @@
         id="primary-search-form"
         role="search"
         aria-label="Primary search"
-        class="hidden md:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
+        class="hidden lg:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
       >
         <!-- ======================== SEARCH BAR ======================== -->
         <!-- @element SearchBar -->
@@ -105,13 +105,17 @@
        On desktop: full-size “Add Recipe” and “Saved Recipes” dropdown.
        On mobile: replaced with compact icons and a FAB.
   -->
-      <div class="flex grow justify-end px-2">
-        <div class="hidden md:flex items-stretch">
-          <!-- Add Recipe Button -->
-          <a id="btn-add-recipe" class="btn btn-ghost rounded-field uppercase">
-            <i data-lucide="plus"></i>
-            Add Recipe
-          </a>
+      <div class="flex grow justify-end px-2 gap-2">
+        <!-- Search Button -->
+        <button id="btn-open-search" class="btn btn-ghost btn-circle lg:hidden" aria-label="Search">
+          <i data-lucide="search"></i>
+        </button>
+
+        <!-- Add Recipe Button -->
+        <a id="btn-add-recipe" class="hidden lg:flex btn btn-ghost rounded-field uppercase">
+          <i data-lucide="plus"></i>
+          Add Recipe
+        </a>
 
           <!-- ========================================================================================= -->
           <!-- @section SavedRecipesDropdown -->
@@ -140,7 +144,7 @@
               class="btn btn-ghost rounded-field uppercase"
             >
               <i data-lucide="bookmark" aria-hidden="true"></i>
-              Saved
+              <span class="hidden lg:inline">Saved</span>
             </div>
 
             <!-- ======================== DROPDOWN PANEL ======================== -->
@@ -184,39 +188,6 @@
     -->
             </ul>
           </div>
-        </div>
-      </div>
-
-      <!-- ======================== MOBILE ACTIONS ======================== -->
-      <!-- @element MobileActions -->
-      <!-- @description
-       Compact icon buttons that replace the search bar and dropdown on smaller screens.
-       Includes a search icon and a saved recipes icon (dropdown preserved).
-  -->
-      <div class="flex md:hidden gap-2 pe-4 items-center">
-        <!-- Search Icon Button -->
-        <button class="btn btn-ghost btn-sm" aria-label="Search">
-          <i data-lucide="search"></i>
-        </button>
-
-        <!-- Saved Recipes Dropdown (Compact Version) -->
-        <div class="dropdown dropdown-end">
-          <button
-            tabindex="0"
-            role="button"
-            class="btn btn-ghost btn-sm"
-            aria-label="Saved Recipes"
-          >
-            <i data-lucide="bookmark"></i>
-          </button>
-          <ul
-            tabindex="-1"
-            class="menu dropdown-content bg-base-200 rounded-box z-10 mt-2 w-48 p-2 shadow-sm"
-          >
-            <li><a>Recipe 1</a></li>
-            <li><a>Recipe 2</a></li>
-          </ul>
-        </div>
       </div>
     </nav>
 
@@ -227,8 +198,8 @@
      Visible only on mobile and tablet screens.
      Positioned above all elements using fixed placement and high z-index.
 -->
-    <div class="fixed bottom-6 right-6 md:hidden z-50">
-      <button class="btn btn-primary btn-circle shadow-lg" aria-label="Add Recipe">
+    <div class="fixed bottom-6 right-6 lg:hidden z-50">
+      <button id="btn-fab-add-recipe" class="btn btn-primary btn-circle shadow-lg" aria-label="Add Recipe">
         <i data-lucide="plus"></i>
       </button>
     </div>
@@ -261,12 +232,28 @@
       <!-- @responsive
     Visible only on large screens (lg and above). Hidden on smaller devices.
   -->
+      <!-- Mobile Search Overlay -->
+      <div id="mobile-search-overlay" class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 opacity-0 lg:hidden" aria-hidden="true"></div>
+
       <section
-        id="search-results-grid"
-        class="hidden lg:flex flex-col justify-between items-center relative w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300"
-        role="region"
-        aria-label="Search results section"
-      >
+  id="search-results-grid"
+  class="hidden lg:flex flex-col justify-between items-center absolute lg:relative w-full lg:w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300 transition-transform duration-300 lg:transition-none"
+  role="region"
+  aria-label="Search results section"
+>
+
+        <!-- ======================== MOBILE SEARCH HEADER ======================== -->
+        <div class="flex items-center gap-2 w-full mb-4 lg:hidden">
+          <form id="mobile-search-form" class="flex-grow">
+            <label class="input input-bordered flex items-center gap-2 w-full">
+              <input type="search" class="grow" placeholder="Search recipes..." />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
+            </label>
+          </form>
+          <button id="btn-close-search" class="btn btn-square btn-ghost">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
         <!-- ======================== LOADING STATE ======================== -->
         <!-- @element LoadingIndicator -->
         <!-- @description
@@ -830,7 +817,7 @@
                   id="recipeTitle"
                   name="title"
                   placeholder="e.g., Chocolate Cake"
-                  value="Default Recipe Title"
+                  
                   class="input input-bordered w-full"
                   required
                 />
@@ -846,7 +833,7 @@
                   id="recipeUrl"
                   name="sourceUrl"
                   placeholder="e.g., https://example.com"
-                  value="https://example.com/recipe"
+                  
                   class="input input-bordered w-full"
                 />
               </div>
@@ -861,7 +848,7 @@
                   id="imageUrl"
                   name="image"
                   placeholder="e.g., https://example.com/image.jpg"
-                  value="https://example.com/default-image.jpg"
+                  
                   class="input input-bordered w-full"
                 />
               </div>
@@ -876,7 +863,7 @@
                   id="publisher"
                   name="publisher"
                   placeholder="e.g., John Doe"
-                  value="Default Publisher"
+                  
                   class="input input-bordered w-full"
                 />
               </div>
@@ -892,7 +879,7 @@
                   name="prepTime"
                   min="1"
                   placeholder="e.g., 30"
-                  value="15"
+                  
                   class="input input-bordered w-full"
                 />
               </div>
@@ -908,7 +895,7 @@
                   name="servings"
                   min="1"
                   placeholder="e.g., 4"
-                  value="2"
+                  
                   class="input input-bordered w-full"
                 />
               </div>
@@ -933,7 +920,7 @@
                     type="text"
                     name="ingredients[]"
                     placeholder="e.g., 1 kg Flour"
-                    value="1 kg Flour"
+                  
                     class="input input-bordered w-full ingredient-input"
                   />
                 </div>
@@ -945,7 +932,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 1 kg Flour"
-                  value="1 kg Flour"
+                
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -955,7 +942,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 1 l Milk"
-                  value="1 l Milk"
+                 
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -965,7 +952,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 2 tbsp Sugar"
-                  value="2 tbsp Sugar"
+                  
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -975,7 +962,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 3 g Salt"
-                  value="3 g Salt"
+                  
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -985,7 +972,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 0.5 cup Butter"
-                  value="0.5 cup Butter"
+                  
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -995,7 +982,7 @@
                   type="text"
                   name="ingredients[]"
                   placeholder="e.g., 1 pc Egg"
-                  value="1 pc Egg"
+                  
                   class="input input-bordered w-full ingredient-input"
                 />
               </div>
@@ -1096,31 +1083,7 @@
           <p class="text-sm text-base-content/70">Your changes have been saved successfully.</p>
         </div>
 
-        <!-- ======================== CLOSE BUTTON ======================== -->
-        <!-- @element CloseButton -->
-        <!-- @description
-      Provides an accessible way for the user to dismiss the alert manually.
-      Visible only when the alert supports manual dismissal.
-    -->
-        <button
-          type="button"
-          class="btn btn-ghost btn-sm ml-auto text-base-content/60 hover:text-base-content"
-          aria-label="Close alert"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+    
       </article>
 
       <!-- ======================== LOADING STATE  ======================== -->

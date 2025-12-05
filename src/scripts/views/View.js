@@ -41,15 +41,15 @@ class View {
   _typeAlert = {
     success: {
       title: 'Recipe ready!',
-      description: 'The recipe has been displayed correctly. Enjoy exploring its details!',
+      description: 'The recipe has been displayed correctly.<br>Enjoy exploring its details!',
     },
     info: {
       title: 'Recipe ready!',
-      description: 'The recipe has been displayed correctly. Enjoy exploring its details!',
+      description: 'The recipe has been displayed correctly.<br>Enjoy exploring its details!',
     },
     error: {
       title: 'We were unable to load the recipe!',
-      description: `It appears there's a problem with the connection. Try refreshing the page or checking your internet connection.`,
+      description: `It appears there's a problem with the connection.<br>Try refreshing the page or checking your internet connection.`,
     },
   };
   _activeTimeout = null;
@@ -273,32 +273,6 @@ class View {
       -->
           <p class="text-sm text-base-content/70">${this._typeAlert[type]?.description}</p>
         </div>
-
-        <!-- ======================== CLOSE BUTTON ======================== -->
-        <!-- @element CloseButton -->
-        <!-- @description
-      Provides an accessible way for the user to dismiss the alert manually.
-      Visible only when the alert supports manual dismissal.
-    -->
-        <button
-          type="button"
-          class="btn btn-ghost btn-sm ml-auto text-base-content/60 hover:text-base-content"
-          aria-label="Close alert"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
       </article>
     `;
   };

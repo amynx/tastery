@@ -14,6 +14,7 @@ class searchView extends View {
   _btnOpenSearch = document.getElementById('btn-open-search');
   _btnCloseSearch = document.getElementById('btn-close-search');
   _searchResultsSection = document.getElementById('search-results-grid');
+  _overlayElement = document.getElementById('mobile-search-overlay');
 
   _typeAlert = {
     success: {
@@ -81,18 +82,45 @@ class searchView extends View {
     if (this._btnCloseSearch) {
       this._btnCloseSearch.addEventListener('click', this._closeMobileSearch.bind(this));
     }
+    if (this._overlayElement) {
+      this._overlayElement.addEventListener('click', this._closeMobileSearch.bind(this));
+    }
   }
 
   _openMobileSearch() {
+    // Show overlay
+    this._overlayElement.classList.remove('hidden');
+    // Trigger reflow
+    void this._overlayElement.offsetWidth;
+    this._overlayElement.classList.remove('opacity-0');
+    
+    // Prepare modal for animation (start off-screen left)
     this._searchResultsSection.classList.remove('hidden');
-    this._searchResultsSection.classList.add('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex');
-    // Focus mobile input
+    this._searchResultsSection.classList.add('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex', '-translate-x-full');
+    
+    // Trigger reflow
+    void this._searchResultsSection.offsetWidth;
+    
+    // Animate in (slide to center)
+    this._searchResultsSection.classList.remove('-translate-x-full');
+    
     setTimeout(() => this._mobileInput?.focus(), 100);
   }
 
   _closeMobileSearch() {
-    this._searchResultsSection.classList.add('hidden');
-    this._searchResultsSection.classList.remove('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex');
+    // Hide overlay
+    this._overlayElement.classList.add('opacity-0');
+    
+    // Animate out (slide to left)
+    this._searchResultsSection.classList.add('-translate-x-full');
+
+    // Wait for transition to finish before hiding elements
+    setTimeout(() => {
+      this._overlayElement.classList.add('hidden');
+      
+      this._searchResultsSection.classList.add('hidden');
+      this._searchResultsSection.classList.remove('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex', '-translate-x-full');
+    }, 300);
   }
 
   // ---------------------------------------------------------------------------

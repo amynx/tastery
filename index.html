@@ -232,9 +232,12 @@
       <!-- @responsive
     Visible only on large screens (lg and above). Hidden on smaller devices.
   -->
+      <!-- Mobile Search Overlay -->
+      <div id="mobile-search-overlay" class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 opacity-0 lg:hidden" aria-hidden="true"></div>
+
       <section
         id="search-results-grid"
-        class="hidden lg:flex flex-col justify-between items-center relative w-full lg:w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300"
+        class="hidden lg:flex flex-col justify-between items-center absolute w-[80%] lg:w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300 transition-transform duration-300 lg:transition-none"
         role="region"
         aria-label="Search results section"
       >

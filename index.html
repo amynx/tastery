@@ -58,7 +58,7 @@
         id="primary-search-form"
         role="search"
         aria-label="Primary search"
-        class="hidden md:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
+        class="hidden lg:flex items-center ml-8 w-full max-w-[40%] lg:max-w-[35%]"
       >
         <!-- ======================== SEARCH BAR ======================== -->
         <!-- @element SearchBar -->
@@ -105,13 +105,17 @@
        On desktop: full-size “Add Recipe” and “Saved Recipes” dropdown.
        On mobile: replaced with compact icons and a FAB.
   -->
-      <div class="flex grow justify-end px-2">
-        <div class="hidden md:flex items-stretch">
-          <!-- Add Recipe Button -->
-          <a id="btn-add-recipe" class="btn btn-ghost rounded-field uppercase">
-            <i data-lucide="plus"></i>
-            Add Recipe
-          </a>
+      <div class="flex grow justify-end px-2 gap-2">
+        <!-- Search Button -->
+        <button id="btn-open-search" class="btn btn-ghost btn-circle lg:hidden" aria-label="Search">
+          <i data-lucide="search"></i>
+        </button>
+
+        <!-- Add Recipe Button -->
+        <a id="btn-add-recipe" class="hidden md:flex btn btn-ghost rounded-field uppercase">
+          <i data-lucide="plus"></i>
+          Add Recipe
+        </a>
 
           <!-- ========================================================================================= -->
           <!-- @section SavedRecipesDropdown -->
@@ -140,7 +144,7 @@
               class="btn btn-ghost rounded-field uppercase"
             >
               <i data-lucide="bookmark" aria-hidden="true"></i>
-              Saved
+              <span class="hidden lg:inline">Saved</span>
             </div>
 
             <!-- ======================== DROPDOWN PANEL ======================== -->
@@ -184,39 +188,6 @@
     -->
             </ul>
           </div>
-        </div>
-      </div>
-
-      <!-- ======================== MOBILE ACTIONS ======================== -->
-      <!-- @element MobileActions -->
-      <!-- @description
-       Compact icon buttons that replace the search bar and dropdown on smaller screens.
-       Includes a search icon and a saved recipes icon (dropdown preserved).
-  -->
-      <div class="flex md:hidden gap-2 pe-4 items-center">
-        <!-- Search Icon Button -->
-        <button class="btn btn-ghost btn-sm" aria-label="Search">
-          <i data-lucide="search"></i>
-        </button>
-
-        <!-- Saved Recipes Dropdown (Compact Version) -->
-        <div class="dropdown dropdown-end">
-          <button
-            tabindex="0"
-            role="button"
-            class="btn btn-ghost btn-sm"
-            aria-label="Saved Recipes"
-          >
-            <i data-lucide="bookmark"></i>
-          </button>
-          <ul
-            tabindex="-1"
-            class="menu dropdown-content bg-base-200 rounded-box z-10 mt-2 w-48 p-2 shadow-sm"
-          >
-            <li><a>Recipe 1</a></li>
-            <li><a>Recipe 2</a></li>
-          </ul>
-        </div>
       </div>
     </nav>
 
@@ -263,10 +234,22 @@
   -->
       <section
         id="search-results-grid"
-        class="hidden lg:flex flex-col justify-between items-center relative w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300"
+        class="hidden lg:flex flex-col justify-between items-center relative w-full lg:w-[30%] min-h-full p-4 bg-base-100 border-r border-base-300"
         role="region"
         aria-label="Search results section"
       >
+        <!-- ======================== MOBILE SEARCH HEADER ======================== -->
+        <div class="flex items-center gap-2 w-full mb-4 lg:hidden">
+          <form id="mobile-search-form" class="flex-grow">
+            <label class="input input-bordered flex items-center gap-2 w-full">
+              <input type="search" class="grow" placeholder="Search recipes..." />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
+            </label>
+          </form>
+          <button id="btn-close-search" class="btn btn-square btn-ghost">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
         <!-- ======================== LOADING STATE ======================== -->
         <!-- @element LoadingIndicator -->
         <!-- @description

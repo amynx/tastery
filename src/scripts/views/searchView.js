@@ -7,6 +7,14 @@ class searchView extends View {
   _parentElement = document.getElementById('results-grid');
   _form = document.getElementById('primary-search-form');
   _input = document.getElementById('input-search-form');
+  
+  // Mobile elements
+  _mobileForm = document.getElementById('mobile-search-form');
+  _mobileInput = this._mobileForm?.querySelector('input');
+  _btnOpenSearch = document.getElementById('btn-open-search');
+  _btnCloseSearch = document.getElementById('btn-close-search');
+  _searchResultsSection = document.getElementById('search-results-grid');
+
   _typeAlert = {
     success: {
       title: 'Recipes found!',
@@ -59,13 +67,40 @@ class searchView extends View {
 
       // Inserto indicator en la card cliqueada
       cardElement.insertAdjacentHTML('afterbegin', this._markupIndicator);
+      
+      // On mobile, close the modal when a result is clicked
+      if (window.innerWidth < 1024) {
+        this._closeMobileSearch();
+      }
     });
+
+    // Mobile Search Modal Events
+    if (this._btnOpenSearch) {
+      this._btnOpenSearch.addEventListener('click', this._openMobileSearch.bind(this));
+    }
+    if (this._btnCloseSearch) {
+      this._btnCloseSearch.addEventListener('click', this._closeMobileSearch.bind(this));
+    }
   }
+
+  _openMobileSearch() {
+    this._searchResultsSection.classList.remove('hidden');
+    this._searchResultsSection.classList.add('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex');
+    // Focus mobile input
+    setTimeout(() => this._mobileInput?.focus(), 100);
+  }
+
+  _closeMobileSearch() {
+    this._searchResultsSection.classList.add('hidden');
+    this._searchResultsSection.classList.remove('fixed', 'inset-0', 'z-50', 'w-full', 'h-full', 'flex');
+  }
+
   // ---------------------------------------------------------------------------
   // PUBLIC METHODS
   // ---------------------------------------------------------------------------
 
   addHandlerRender = (handler) => {
+    // Desktop Form
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = this._input.value;
@@ -76,6 +111,21 @@ class searchView extends View {
       this._input.value = '';
       handler(query);
     });
+
+    // Mobile Form
+    if (this._mobileForm) {
+      this._mobileForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = this._mobileInput.value;
+        if (!query) {
+          this._mobileInput.value = '';
+          return;
+        }
+        this._mobileInput.value = '';
+        // Also clear desktop input to stay in sync if needed, or just run handler
+        handler(query);
+      });
+    }
   };
 
   _generateMarkup = () => {

@@ -13,6 +13,7 @@ class formView extends View {
   _form = document.getElementById('form');
   _overlayElement = document.querySelector('.modal-backdrop');
   _btnAddRecipe = document.getElementById('btn-add-recipe');
+  _btnFabAddRecipe = document.getElementById('btn-fab-add-recipe');
   _btnCloseForm = document.getElementById('btn-close-form');
   _btnSubmitForm = document.getElementById('btn-submit-form');
 
@@ -34,9 +35,16 @@ class formView extends View {
   }
 
   addHandlerAddRecipe = () => {
-    this._btnAddRecipe.addEventListener('click', () => {
-      this.toggleWindow();
-    });
+    if (this._btnAddRecipe) {
+      this._btnAddRecipe.addEventListener('click', () => {
+        this.toggleWindow();
+      });
+    }
+    if (this._btnFabAddRecipe) {
+      this._btnFabAddRecipe.addEventListener('click', () => {
+        this.toggleWindow();
+      });
+    }
   };
 
   addHandlerSubmit = (handler) => {
